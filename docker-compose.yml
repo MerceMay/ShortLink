@@ -11,3 +11,13 @@ services:
       MYSQL_COLLATION: utf8mb4_unicode_ci
     volumes:
       - ./volumes/mysql/data:/var/lib/mysql
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis/data:/data
+    restart: always

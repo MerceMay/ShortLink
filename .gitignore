@@ -40,3 +40,6 @@ build/
 
 ### Mysql Volumes ###
 /volumes/mysql/data/
+
+### Redis Volumes ###
+/volumes/redis/data/
