@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.common.convention.result.Results;
 import com.mercemay.shortlink.admin.dto.req.UserRegisterReqDTO;
+import com.mercemay.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserRespDTO;
 import com.mercemay.shortlink.admin.service.UserService;
@@ -63,4 +64,12 @@ public class UserController {
         return Results.success();
     }
 
+    /**
+     *
+     */
+    @PutMapping("/api/short-link/v1/user")
+    public Result<Void> update(@RequestBody UserUpdateReqDTO requestParam) {
+        userService.updateByUsername(requestParam);
+        return Results.success();
+    }
 }
