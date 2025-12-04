@@ -92,10 +92,21 @@ public class UserController {
     /**
      * 检查用户登录状态
      *
+     * @param username 用户名
+     * @param token    登录token
      * @return 结果
      */
     @GetMapping("/api/short-link/v1/user/check-login")
     public Result<Boolean> checkLogin(@RequestParam("username") String username, @RequestParam("token") String token) {
         return Results.success(userService.checkLogin(username, token));
+    }
+
+    /**
+     * 用户登出
+     */
+    @DeleteMapping("/api/short-link/v1/user/logout")
+    public Result<Void> logout(@RequestParam("username") String username, @RequestParam("token") String token) {
+        userService.logout(username, token);
+        return Results.success();
     }
 }
