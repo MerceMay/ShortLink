@@ -2,8 +2,10 @@ package com.mercemay.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.mercemay.shortlink.admin.dao.entity.UserDO;
+import com.mercemay.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.mercemay.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.mercemay.shortlink.admin.dto.req.UserUpdateReqDTO;
+import com.mercemay.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserRespDTO;
 
 /**
@@ -40,5 +42,22 @@ public interface UserService extends IService<UserDO> {
      * @param requestParam 更新请求参数
      */
     void updateByUsername(UserUpdateReqDTO requestParam);
+
+    /**
+     * 用户登录
+     *
+     * @param requestParam 登录请求参数
+     * @return 登录返回实体
+     */
+    UserLoginRespDTO login(UserLoginReqDTO requestParam);
+
+    /**
+     * 检查登录状态
+     *
+     * @param username 用户名
+     * @param token    登录token
+     * @return 是否登录
+     */
+    Boolean checkLogin(String username, String token);
 }
 

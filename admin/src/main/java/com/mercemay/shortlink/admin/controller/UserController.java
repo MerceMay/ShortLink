@@ -3,9 +3,11 @@ package com.mercemay.shortlink.admin.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.common.convention.result.Results;
+import com.mercemay.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.mercemay.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.mercemay.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserActualRespDTO;
+import com.mercemay.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserRespDTO;
 import com.mercemay.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -65,11 +67,35 @@ public class UserController {
     }
 
     /**
+     * 根据用户名更新用户信息
      *
+     * @param requestParam 更新请求参数
+     * @return 结果
      */
     @PutMapping("/api/short-link/v1/user")
     public Result<Void> update(@RequestBody UserUpdateReqDTO requestParam) {
         userService.updateByUsername(requestParam);
         return Results.success();
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param requestParam 登录请求参数
+     * @return 结果
+     */
+    @PostMapping("/api/short-link/v1/user/login")
+    public Result<UserLoginRespDTO> login(@RequestBody UserLoginReqDTO requestParam) {
+        return Results.success(userService.login(requestParam));
+    }
+
+    /**
+     * 检查用户登录状态
+     *
+     * @return 结果
+     */
+    @GetMapping("/api/short-link/v1/user/check-login")
+    public Result<Boolean> checkLogin(@RequestParam("username") String username, @RequestParam("token") String token) {
+        return Results.success(userService.checkLogin(username, token));
     }
 }
