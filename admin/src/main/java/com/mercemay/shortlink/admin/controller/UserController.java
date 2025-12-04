@@ -103,6 +103,9 @@ public class UserController {
 
     /**
      * 用户登出
+     *
+     * @param username 用户名
+     * @param token    登录token
      */
     @DeleteMapping("/api/short-link/v1/user/logout")
     public Result<Void> logout(@RequestParam("username") String username, @RequestParam("token") String token) {
