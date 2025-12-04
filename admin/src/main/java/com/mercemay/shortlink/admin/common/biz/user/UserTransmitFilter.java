@@ -1,42 +1,60 @@
 package com.mercemay.shortlink.admin.common.biz.user;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import com.mercemay.shortlink.admin.common.convention.exception.ClientException;
+import com.mercemay.shortlink.admin.common.convention.result.Results;
+import com.mercemay.shortlink.admin.common.enums.UserErrorCodeEnum;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.SneakyThrows;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * 用户信息传递过滤器
  */
-@Slf4j
 @RequiredArgsConstructor
 public class UserTransmitFilter implements Filter {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    // private static final List<String> IGNORE_URI = List.of(
-    //         "/api/short-link/admin/v1/user/login",
-    //         "/api/short-link/admin/v1/user/had-username"
-    // );
+    private static final List<String> IGNORE_URI = List.of(
+            "/api/short-link/admin/v1/user/login",
+            "/api/short-link/admin/v1/user/had-username"
+    );
 
+    @SneakyThrows
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpServletRequest.getRequestURI();
-        if (!Objects.equals(requestURI, "/api/short-link/admin/v1/user/login")) {
-            String username = httpServletRequest.getHeader("username");
-            String token = httpServletRequest.getHeader("token");
-            Object userInfoJsonStr = stringRedisTemplate.opsForHash().get("login:" + username, token);
-            log.info("userInfoJsonStr:{}", userInfoJsonStr);
-            if (userInfoJsonStr != null) {
-                log.info("before deserialize json");
+        if (!IGNORE_URI.contains(requestURI)) {
+            String method = httpServletRequest.getMethod();
+            if (!(Objects.equals(requestURI, "/api/short-link/admin/v1/user") && Objects.equals(method, "POST"))) { // 如果不是注册接口
+                String username = httpServletRequest.getHeader("username");
+                String token = httpServletRequest.getHeader("token");
+                if (!StrUtil.isAllNotBlank(username, token)) {
+                    returnJson((HttpServletResponse) servletResponse, JSON.toJSONString(Results.failure(new ClientException(UserErrorCodeEnum.USER_TOKEN_FAILED))));
+                    return;
+                }
+                Object userInfoJsonStr;
+                try {
+                    userInfoJsonStr = stringRedisTemplate.opsForHash().get("login:" + username, token);
+                    if (userInfoJsonStr == null) {
+                        throw new ClientException(UserErrorCodeEnum.USER_TOKEN_FAILED);
+                    }
+                } catch (Exception e) {
+                    returnJson((HttpServletResponse) servletResponse, JSON.toJSONString(Results.failure(new ClientException(UserErrorCodeEnum.USER_TOKEN_FAILED))));
+                    return;
+                }
                 UserInfoDTO userInfoDTO = JSON.parseObject(userInfoJsonStr.toString(), UserInfoDTO.class);
-                log.info("after deserialize json");
                 UserContext.setUser(userInfoDTO);
             }
         }
@@ -44,6 +62,16 @@ public class UserTransmitFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             UserContext.removeUser();
+        }
+    }
+
+    private void returnJson(HttpServletResponse response, String json) throws Exception {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=utf-8");
+        try (PrintWriter writer = response.getWriter()) {
+            writer.print(json);
+
+        } catch (IOException ignored) {
         }
     }
 }
