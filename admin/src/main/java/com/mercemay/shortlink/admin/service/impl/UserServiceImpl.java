@@ -1,6 +1,7 @@
 package com.mercemay.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -100,15 +101,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (isLogin) {
             throw new ClientException(UserErrorCodeEnum.USER_HAVE_LOGIN);
         }
-        String uuid = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForHash().put("login:" + requestParam.getUsername(), "token", uuid);
-        stringRedisTemplate.expire("login:" + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
-        return new UserLoginRespDTO(uuid);
+        String token = UUID.randomUUID().toString();
+        stringRedisTemplate.opsForHash().put("login:" + requestParam.getUsername(), token, JSON.toJSONString(userDO));
+        stringRedisTemplate.expire("login:" + requestParam.getUsername(), 30L, TimeUnit.DAYS);
+        return new UserLoginRespDTO(token);
     }
 
     @Override
     public Boolean checkLogin(String username, String token) {
-        return stringRedisTemplate.opsForHash().get("login:" + username, "token") != null;
+        return stringRedisTemplate.opsForHash().get("login:" + username, token) != null;
     }
 
     @Override
