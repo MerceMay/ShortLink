@@ -3,6 +3,7 @@ package com.mercemay.shortlink.admin.controller;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.common.convention.result.Results;
 import com.mercemay.shortlink.admin.dto.req.ShortLinkGroupSaveReqDTO;
+import com.mercemay.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.mercemay.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.mercemay.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.mercemay.shortlink.admin.service.GroupService;
@@ -62,6 +63,18 @@ public class GroupController {
     @DeleteMapping("/api/short-link/v1/group")
     public Result<Void> deleteGroup(@RequestParam String gid) {
         groupService.deleteGroup(gid);
+        return Results.success();
+    }
+
+    /**
+     * 短链接分组排序
+     *
+     * @param requestParam 请求参数
+     * @return 结果
+     */
+    @PostMapping("/api/short-link/v1/group/sort")
+    public Result<Void> sortGroup(@RequestBody List<ShortLinkGroupSortReqDTO> requestParam) {
+        groupService.sortGroup(requestParam);
         return Results.success();
     }
 }
