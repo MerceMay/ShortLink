@@ -32,7 +32,7 @@ public class GroupController {
     }
 
     /**
-     * 查询用户短链接分组列表
+     * 查询登录用户短链接分组列表
      *
      * @return 短链接分组列表
      */
@@ -50,6 +50,18 @@ public class GroupController {
     @PutMapping("/api/short-link/v1/group")
     public Result<Void> updateGroup(@RequestBody ShortLinkGroupUpdateReqDTO requestParam) {
         groupService.updateGroup(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 删除短链接分组
+     *
+     * @param gid 分组gid
+     * @return 结果
+     */
+    @DeleteMapping("/api/short-link/v1/group")
+    public Result<Void> deleteGroup(@RequestParam String gid) {
+        groupService.deleteGroup(gid);
         return Results.success();
     }
 }

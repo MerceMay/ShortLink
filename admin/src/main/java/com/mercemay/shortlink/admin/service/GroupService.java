@@ -20,7 +20,7 @@ public interface GroupService extends IService<GroupDO> {
     void saveGroup(String groupName);
 
     /**
-     * 查询用户短链接分组列表
+     * 查询登录用户短链接分组列表
      *
      * @return 短链接分组列表
      */
@@ -32,4 +32,11 @@ public interface GroupService extends IService<GroupDO> {
      * @param requestParam 请求参数
      */
     void updateGroup(ShortLinkGroupUpdateReqDTO requestParam);
+
+    /**
+     * 删除短链接分组
+     *
+     * @param gid 分组gid
+     */
+    void deleteGroup(String gid);
 }
