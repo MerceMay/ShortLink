@@ -2,9 +2,11 @@ package com.mercemay.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
+import com.mercemay.shortlink.admin.common.convention.result.Results;
 import com.mercemay.shortlink.admin.remote.ShortLinkRemoteService;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
+import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkUpdateReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
@@ -32,6 +34,18 @@ public class ShortLinkController {
     @PostMapping("/api/short-link/admin/v1/create")
     public Result<ShortLinkCreateRespDTO> createShortLinkGroup(@RequestBody ShortLinkCreateReqDTO requestParam) {
         return shortLinkRemoteService.createShortLink(requestParam);
+    }
+
+    /**
+     * 更新短链接
+     *
+     * @param requestParam 请求参数
+     * @return 结果
+     */
+    @PutMapping("/api/short-link/admin/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam) {
+        shortLinkRemoteService.updateShortLink(requestParam);
+        return Results.success();
     }
 
     /**
