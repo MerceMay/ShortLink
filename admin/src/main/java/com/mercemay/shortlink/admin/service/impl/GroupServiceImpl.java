@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -40,15 +41,20 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
 
     @Override
     public void saveGroup(String groupName) {
+        saveGroup(UserContext.getUserName(), groupName);
+    }
+
+    @Override
+    public void saveGroup(String username, String groupName) {
         String gid = RandomGenerator.generateRandom();
-        while (hadGid(gid)) { // 检查gid是否存在，如果存在则重新生成
+        while (hadGid(username, gid)) { // 检查gid是否存在，如果存在则重新生成
             gid = RandomGenerator.generateRandom();
         }
         GroupDO groupDO = GroupDO.builder()
                 .gid(gid)
                 .name(groupName)
                 .sortOrder(0)
-                .username(UserContext.getUserName())
+                .username(username)
                 .build();
         baseMapper.insert(groupDO);
     }
@@ -126,10 +132,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         });
     }
 
-    private boolean hadGid(String gid) {
+    private boolean hadGid(String username, String gid) {
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getGid, gid)
-                .eq(GroupDO::getUsername, UserContext.getUserName());
+                .eq(GroupDO::getUsername, Optional.ofNullable(username).orElse(UserContext.getUserName()));
         GroupDO groupDO = baseMapper.selectOne(queryWrapper);
         return groupDO != null; // 存在返回true
     }

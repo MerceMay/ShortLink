@@ -16,6 +16,7 @@ import com.mercemay.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.mercemay.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.mercemay.shortlink.admin.dto.resp.UserRespDTO;
+import com.mercemay.shortlink.admin.service.GroupService;
 import com.mercemay.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;
@@ -39,6 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
+    private final GroupService groupService;
 
     @Override
     public UserRespDTO getUserByName(String username) {
@@ -66,15 +68,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         RLock lock = redissonClient.getLock(RedisCacheConstant.LOCK_USER_REGISTER_KEY + requestParam.getUsername());
         try {
             if (lock.tryLock()) {
-                try{
+                try {
                     int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
                     if (inserted < 1) {
                         throw new ClientException(UserErrorCodeEnum.USER_SAVE_ERROR);
                     }
-                } catch (DuplicateKeyException ex){
+                } catch (DuplicateKeyException ex) {
                     throw new ClientException(UserErrorCodeEnum.USER_EXIST);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+                groupService.saveGroup(requestParam.getUsername(), "默认分组");
                 return;
             }
             throw new ClientException(UserErrorCodeEnum.USER_NAME_EXIST);
