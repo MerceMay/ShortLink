@@ -225,19 +225,18 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkDO::getEnableStatus, 0)
                     .eq(ShortLinkDO::getDelFlag, 0);
             ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
-            if (shortLinkDO != null) {
-                if (shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date())) {
-                    stringRedisTemplate.opsForValue().set(RedisKeyConstant.ROUTE_SHORT_LINK_IS_NULL + fullShortUrl, "-", 30, TimeUnit.MINUTES);
-                    ((HttpServletResponse) response).sendRedirect("/page/notfound");
-                    return;
-                }
-                stringRedisTemplate.opsForValue().set(
-                        RedisKeyConstant.ROUTE_SHORT_LINK_KEY + fullShortUrl,
-                        shortLinkDO.getOriginUrl(),
-                        LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),
-                        TimeUnit.MILLISECONDS);
-                ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
+            if (shortLinkDO == null || (shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date()))) {
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.ROUTE_SHORT_LINK_IS_NULL + fullShortUrl, "-", 30, TimeUnit.MINUTES);
+                ((HttpServletResponse) response).sendRedirect("/page/notfound");
+                return;
             }
+            stringRedisTemplate.opsForValue().set(
+                    RedisKeyConstant.ROUTE_SHORT_LINK_KEY + fullShortUrl,
+                    shortLinkDO.getOriginUrl(),
+                    LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),
+                    TimeUnit.MILLISECONDS);
+            ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
+
         } finally {
             lock.unlock();
         }
@@ -273,7 +272,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         if (responseCode == HttpURLConnection.HTTP_OK) {
             Document document = Jsoup.connect(url).get();
             Element faviconLink = document.select("link[rel~=(?i)^(shortcut )?icon]").first();
-            if (faviconLink != null){
+            if (faviconLink != null) {
                 return faviconLink.attr("abs:href");
             }
         }
