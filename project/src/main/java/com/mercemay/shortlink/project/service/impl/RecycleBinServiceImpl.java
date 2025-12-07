@@ -10,7 +10,7 @@ import com.mercemay.shortlink.project.common.constant.RedisKeyConstant;
 import com.mercemay.shortlink.project.dao.entity.ShortLinkDO;
 import com.mercemay.shortlink.project.dao.mapper.ShortLinkMapper;
 import com.mercemay.shortlink.project.dto.req.RecycleBinSaveReqDTO;
-import com.mercemay.shortlink.project.dto.req.ShortLinkPageReqDTO;
+import com.mercemay.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.mercemay.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.mercemay.shortlink.project.service.RecycleBinService;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +40,12 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
     }
 
     @Override
-    public IPage<ShortLinkPageRespDTO> pageRecycleBinShortLink(ShortLinkPageReqDTO requestParam) {
+    public IPage<ShortLinkPageRespDTO> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
         LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
-                .eq(ShortLinkDO::getGid, requestParam.getGid())
+                .in(ShortLinkDO::getGid, requestParam.getGidList())
                 .eq(ShortLinkDO::getEnableStatus, 1)
                 .eq(ShortLinkDO::getDelFlag, 0)
-                .orderByDesc(ShortLinkDO::getCreateTime);
+                .orderByDesc(ShortLinkDO::getUpdateTime);
         IPage<ShortLinkDO> resultPage = baseMapper.selectPage(requestParam, queryWrapper);
         return resultPage.convert(each -> {
             ShortLinkPageRespDTO result = BeanUtil.toBean(each, ShortLinkPageRespDTO.class);

@@ -5,9 +5,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
-import com.mercemay.shortlink.admin.remote.dto.req.RecycleBinSaveReqDTO;
+import com.mercemay.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
+import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkUpdateReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
@@ -102,9 +103,9 @@ public interface ShortLinkRemoteService {
      * @param requestParm 请求参数
      * @return 结果
      */
-    default Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkPageReqDTO requestParm) {
+    default Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParm) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("gid", requestParm.getGid());
+        requestMap.put("gidList", requestParm.getGidList());
         requestMap.put("current", requestParm.getCurrent());
         requestMap.put("size", requestParm.getSize());
         String resultPageStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/page", requestMap);

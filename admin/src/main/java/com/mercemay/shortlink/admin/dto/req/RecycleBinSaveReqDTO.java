@@ -1,4 +1,4 @@
-package com.mercemay.shortlink.admin.remote.dto.req;
+package com.mercemay.shortlink.admin.dto.req;
 
 import lombok.Data;
 
