@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mercemay.shortlink.project.common.constant.RedisKeyConstant;
 import com.mercemay.shortlink.project.dao.entity.ShortLinkDO;
 import com.mercemay.shortlink.project.dao.mapper.ShortLinkMapper;
+import com.mercemay.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
 import com.mercemay.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.mercemay.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -52,5 +53,19 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
             result.setFullShortUrl("http://" + each.getFullShortUrl());
             return result;
         });
+    }
+
+    @Override
+    public void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam) {
+        LambdaUpdateWrapper<ShortLinkDO> updateWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
+                .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(ShortLinkDO::getGid, requestParam.getGid())
+                .eq(ShortLinkDO::getEnableStatus, 1)
+                .eq(ShortLinkDO::getDelFlag, 0);
+        ShortLinkDO shortLinkDO = ShortLinkDO.builder()
+                .enableStatus(0)
+                .build();
+        baseMapper.update(shortLinkDO, updateWrapper);
+        stringRedisTemplate.delete(RedisKeyConstant.ROUTE_NULL_SHORT_LINK_KEY + requestParam.getFullShortUrl()); // 删除缓存，确保恢复后可以正常访问
     }
 }

@@ -198,7 +198,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
         }
-        String nullShortLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.ROUTE_SHORT_LINK_IS_NULL + fullShortUrl);
+        String nullShortLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.ROUTE_NULL_SHORT_LINK_KEY + fullShortUrl);
         if (StrUtil.isNotBlank(nullShortLink)) {
             ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
@@ -215,7 +215,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkRouteDO::getFullShortUrl, fullShortUrl);
             ShortLinkRouteDO shortLinkRouteDO = shortLinkRouteMapper.selectOne(shortLinkRouteDOLambdaQueryWrapper);
             if (shortLinkRouteDO == null) {
-                stringRedisTemplate.opsForValue().set(RedisKeyConstant.ROUTE_SHORT_LINK_IS_NULL + fullShortUrl, "-", 30, TimeUnit.MINUTES);
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.ROUTE_NULL_SHORT_LINK_KEY + fullShortUrl, "-", 30, TimeUnit.MINUTES);
                 ((HttpServletResponse) response).sendRedirect("/page/notfound");
                 return;
             }
@@ -226,7 +226,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkDO::getDelFlag, 0);
             ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
             if (shortLinkDO == null || (shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date()))) {
-                stringRedisTemplate.opsForValue().set(RedisKeyConstant.ROUTE_SHORT_LINK_IS_NULL + fullShortUrl, "-", 30, TimeUnit.MINUTES);
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.ROUTE_NULL_SHORT_LINK_KEY + fullShortUrl, "-", 30, TimeUnit.MINUTES);
                 ((HttpServletResponse) response).sendRedirect("/page/notfound");
                 return;
             }

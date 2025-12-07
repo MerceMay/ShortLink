@@ -12,7 +12,7 @@ public class RedisKeyConstant {
     /**
      * 短链接路由信息空值Key
      */
-    public static final String ROUTE_SHORT_LINK_IS_NULL = "shortlink:route:null";
+    public static final String ROUTE_NULL_SHORT_LINK_KEY = "shortlink:route:null";
 
     /**
      * 短链接路由信息分布式锁Key前缀
