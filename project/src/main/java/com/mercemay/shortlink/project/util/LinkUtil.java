@@ -27,6 +27,9 @@ public class LinkUtil {
 
     /**
      * 获取用户真实IP
+     *
+     * @param request HttpServletRequest对象
+     * @return 用户真实IP地址
      */
     public static String getActualIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -46,5 +49,28 @@ public class LinkUtil {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    /**
+     * 获取操作系统信息
+     *
+     * @param request HttpServletRequest对象
+     * @return 操作系统信息
+     */
+    public static String getOs(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent.toLowerCase().contains("windows")) {
+            return "Windows";
+        } else if (userAgent.toLowerCase().contains("mac")) {
+            return "Mac OS";
+        } else if (userAgent.toLowerCase().contains("x11")) {
+            return "Unix";
+        } else if (userAgent.toLowerCase().contains("android")) {
+            return "Android";
+        } else if (userAgent.toLowerCase().contains("iphone") || userAgent.toLowerCase().contains("ipad")) {
+            return "iOS";
+        } else {
+            return "Unknown";
+        }
     }
 }
