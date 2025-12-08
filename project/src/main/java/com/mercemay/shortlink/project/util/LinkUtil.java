@@ -73,4 +73,27 @@ public class LinkUtil {
             return "Unknown";
         }
     }
+
+    /**
+     * 获取浏览器信息
+     *
+     * @param request HttpServletRequest对象
+     * @return 浏览器信息
+     */
+    public static String getBrowser(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent.toLowerCase().contains("chrome")) {
+            return "Chrome";
+        } else if (userAgent.toLowerCase().contains("firefox")) {
+            return "Firefox";
+        } else if (userAgent.toLowerCase().contains("safari") && !userAgent.toLowerCase().contains("chrome")) {
+            return "Safari";
+        } else if (userAgent.toLowerCase().contains("edge")) {
+            return "Edge";
+        } else if (userAgent.toLowerCase().contains("msie") || userAgent.toLowerCase().contains("trident")) {
+            return "Internet Explorer";
+        } else {
+            return "Unknown";
+        }
+    }
 }
