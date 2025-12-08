@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 链接设备统计实体类
+ * 链接网络统计实体类
  */
 @Data
-@TableName("t_link_device_stats")
+@TableName("t_link_network_stats")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkDeviceStatsDO extends BaseDO {
+public class LinkNetworkStatsDO extends BaseDO {
     /**
      * id
      */
@@ -47,7 +47,7 @@ public class LinkDeviceStatsDO extends BaseDO {
     private Integer cnt;
 
     /**
-     * 访问设备
+     * 访问网络
      */
-    private String device;
+    private String network;
 }

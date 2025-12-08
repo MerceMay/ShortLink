@@ -111,4 +111,15 @@ public class LinkUtil {
             return "PC";
         }
     }
+
+    /**
+     * 获取网络类型
+     *
+     * @param request HttpServletRequest对象
+     * @return 网络类型
+     */
+    public static String getNetwork(HttpServletRequest request) {
+        String actualIp = getActualIp(request);
+        return actualIp.startsWith("192.168.") || actualIp.startsWith("10.") || actualIp.startsWith("172.") ? "WIFI" : "Mobile";
+    }
 }
