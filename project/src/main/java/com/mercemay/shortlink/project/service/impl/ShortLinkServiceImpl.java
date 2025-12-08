@@ -3,6 +3,7 @@ package com.mercemay.shortlink.project.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -56,6 +57,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 短链接接口实现层
@@ -73,6 +75,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
+    private final LinkAccessLogsMapper linkAccessLogsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -261,15 +264,16 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         AtomicBoolean uvFirstFlag = new AtomicBoolean();
         Cookie[] cookies = ((HttpServletRequest) request).getCookies();
         try {
+            AtomicReference<String> uv = new AtomicReference<>();
             // 当前请求没有uv Cookie时，生成一个新的uv Cookie并添加到响应中
             Runnable addResponseCookieTask = () -> {
-                String uv = UUID.randomUUID().toString(); // 生成唯一访客标识
-                Cookie uvCookie = new Cookie("uv", uv); // 创建Cookie
+                uv.set(UUID.fastUUID().toString()); // 生成唯一访客标识
+                Cookie uvCookie = new Cookie("uv", uv.get()); // 创建Cookie
                 uvCookie.setMaxAge(24 * 60 * 60); // 设置Cookie的有效期为1天
                 uvCookie.setPath(StrUtil.sub(fullShortUrl, fullShortUrl.indexOf("/"), fullShortUrl.length())); // 设置Cookie的作用路径为根路径
                 ((HttpServletResponse) response).addCookie(uvCookie); // 将Cookie添加到响应中
                 uvFirstFlag.set(true); // 标记为首次访问
-                stringRedisTemplate.opsForSet().add(RedisKeyConstant.STATS_UV_KEY + fullShortUrl, uv); // 将访客标识存储到Redis中
+                stringRedisTemplate.opsForSet().add(RedisKeyConstant.STATS_UV_KEY + fullShortUrl, uv.get()); // 将访客标识存储到Redis中
             };
 
             // 检查请求中的Cookie，查看是否存在名为 "uv" 的Cookie
@@ -279,6 +283,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .findFirst() // 找到名为 "uv" 的Cookie
                         .map(Cookie::getValue) // 获取Cookie的值
                         .ifPresentOrElse(each -> { // 如果存在uv Cookie
+                            uv.set(each);
                             Long uvAdded = stringRedisTemplate.opsForSet().add(RedisKeyConstant.STATS_UV_KEY + fullShortUrl, each); // 尝试将访客标识存储到Redis中
                             uvFirstFlag.set(uvAdded != null && uvAdded > 0); // 如果添加成功，表示是首次访问
                         }, addResponseCookieTask); // 如果不存在uv Cookie，执行添加响应Cookie的任务
@@ -328,22 +333,33 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .date(new Date())
                         .build();
                 linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
+                String os = LinkUtil.getOs((HttpServletRequest) request);
                 LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
-                        .os(LinkUtil.getOs((HttpServletRequest) request))
+                        .os(os)
                         .cnt(1)
                         .gid(gid)
                         .fullShortUrl(fullShortUrl)
                         .date(new Date())
                         .build();
                 linkOsStatsMapper.shortLinkOsStats(linkOsStatsDO);
+                String browser = LinkUtil.getBrowser((HttpServletRequest) request);
                 LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
-                        .browser(LinkUtil.getBrowser((HttpServletRequest) request))
+                        .browser(browser)
                         .cnt(1)
                         .gid(gid)
                         .fullShortUrl(fullShortUrl)
                         .date(new Date())
                         .build();
                 linkBrowserStatsMapper.shortLinkBrowserStats(linkBrowserStatsDO);
+                LinkAccessLogsDO linkAccessLogsDO = LinkAccessLogsDO.builder()
+                        .user(uv.get())
+                        .ip(remoteAddr)
+                        .browser(browser)
+                        .os(os)
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .build();
+                linkAccessLogsMapper.insert(linkAccessLogsDO);
             }
         } catch (Throwable ex) {
             log.error("短链接访问量统计异常", ex);

@@ -1,5 +1,7 @@
 package com.mercemay.shortlink.project.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.mercemay.shortlink.project.common.database.BaseDO;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class LinkOsStatsDO extends BaseDO {
     /**
      * id
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
