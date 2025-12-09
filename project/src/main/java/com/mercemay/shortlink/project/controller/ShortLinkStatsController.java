@@ -3,6 +3,7 @@ package com.mercemay.shortlink.project.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.mercemay.shortlink.project.common.convention.result.Result;
 import com.mercemay.shortlink.project.common.convention.result.Results;
+import com.mercemay.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkStatsReqDTO;
@@ -52,5 +53,16 @@ public class ShortLinkStatsController {
     @GetMapping("/api/short-link/v1/stats/access-record")
     public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsAccessRecordReqDTO requestParam) {
         return Results.success(shortLinkStatsService.getShortLinkAccessRecordStats(requestParam));
+    }
+
+    /**
+     * 访问短链接分组指定时间内访问记录监控数据
+     *
+     * @param requestParam 请求参数
+     * @return 短链接分组访问记录监控数据
+     */
+    @GetMapping("/api/short-link/v1/stats/access-record/group")
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> getShortLinkGroupAccessRecordStats(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        return Results.success(shortLinkStatsService.getShortLinkGroupAccessRecordStats(requestParam));
     }
 }

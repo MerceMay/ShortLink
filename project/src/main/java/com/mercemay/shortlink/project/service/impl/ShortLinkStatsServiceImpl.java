@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
+import com.mercemay.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkStatsReqDTO;
@@ -426,6 +427,38 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                         .map(item -> item.get("uvType"))
                         .map(Object::toString)
                         .orElse("旧访客") // 如果没有数据则为“老访客”
+        ));
+        return resultPage;
+    }
+
+    @Override
+    public IPage<ShortLinkStatsAccessRecordRespDTO> getShortLinkGroupAccessRecordStats(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
+                .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
+                .between(LinkAccessLogsDO::getCreateTime, requestParam.getStartDate(), requestParam.getEndDate())
+                .eq(LinkAccessLogsDO::getDelFlag, 0)
+                .orderByDesc(LinkAccessLogsDO::getCreateTime);
+        IPage<LinkAccessLogsDO> pageResult = linkAccessLogsMapper.selectPage(requestParam, queryWrapper);
+        IPage<ShortLinkStatsAccessRecordRespDTO> resultPage = pageResult.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
+        List<String> userAccessLogsList = resultPage.getRecords().stream()
+                .map(ShortLinkStatsAccessRecordRespDTO::getUser)
+                .toList();
+        if (CollUtil.isEmpty(userAccessLogsList)) {
+            return resultPage;
+        }
+        List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectGroupUvTypeByUsers(
+                requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate(),
+                userAccessLogsList
+        );
+        resultPage.getRecords().forEach(each -> each.setUvType(
+                uvTypeList.stream()
+                        .filter(item -> Objects.equals(each.getUser(), item.get("user")))
+                        .findFirst()
+                        .map(item -> item.get("uvType"))
+                        .map(Object::toString)
+                        .orElse("旧访客")
         ));
         return resultPage;
     }
