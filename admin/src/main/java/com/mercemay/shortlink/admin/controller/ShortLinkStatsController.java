@@ -1,8 +1,10 @@
 package com.mercemay.shortlink.admin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.remote.ShortLinkRemoteService;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkStatsReqDTO;
+import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkStatsRespDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,5 +28,16 @@ public class ShortLinkStatsController {
     @GetMapping("/api/short-link/admin/v1/stats")
     public Result<ShortLinkStatsRespDTO> getShortLinkStats(ShortLinkStatsReqDTO requestParam) {
         return shortLinkRemoteService.getShortLinkStats(requestParam);
+    }
+
+    /**
+     * 访问单个短链接指定时间内访问记录监控数据
+     *
+     * @param requestParam 请求参数
+     * @return 短链接访问记录监控数据
+     */
+    @GetMapping("/api/short-link/admin/v1/stats/access-record")
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsReqDTO requestParam) {
+        return shortLinkRemoteService.getShortLinkAccessRecordStats(requestParam);
     }
 }

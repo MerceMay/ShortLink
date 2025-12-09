@@ -10,10 +10,7 @@ import com.mercemay.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
 import com.mercemay.shortlink.admin.dto.req.RecycleBinRemoveReqDTO;
 import com.mercemay.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.*;
-import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
-import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
-import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
-import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkStatsRespDTO;
+import com.mercemay.shortlink.admin.remote.dto.resp.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
@@ -137,6 +134,21 @@ public interface ShortLinkRemoteService {
      */
     default Result<ShortLinkStatsRespDTO> getShortLinkStats(ShortLinkStatsReqDTO requestParam) {
         String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
+        return JSON.parseObject(resultBodyStr, new TypeReference<>() {
+        });
+    }
+
+    /**
+     * 访问单个短链接指定时间内访问记录监控数据
+     *
+     * @param requestParam 请求参数
+     * @return 短链接访问记录监控数据
+     */
+    default Result<IPage<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsReqDTO requestParam){
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(requestParam, false, true);
+        stringObjectMap.remove("orders");
+        stringObjectMap.remove("records");
+        String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record", stringObjectMap);
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
     }

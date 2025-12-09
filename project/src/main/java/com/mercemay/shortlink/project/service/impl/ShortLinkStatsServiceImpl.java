@@ -1,13 +1,15 @@
 package com.mercemay.shortlink.project.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
-import com.mercemay.shortlink.project.dao.entity.LinkAccessStatsDO;
-import com.mercemay.shortlink.project.dao.entity.LinkDeviceStatsDO;
-import com.mercemay.shortlink.project.dao.entity.LinkLocaleStatsDO;
-import com.mercemay.shortlink.project.dao.entity.LinkNetworkStatsDO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
+import com.mercemay.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import com.mercemay.shortlink.project.dto.resp.*;
 import com.mercemay.shortlink.project.service.ShortLinkStatsService;
@@ -223,5 +225,36 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                 .deviceStats(deviceRespDTOList)
                 .networkStats(networkRespDTOList)
                 .build();
+    }
+
+    @Override
+    public IPage<ShortLinkStatsAccessRecordRespDTO> getShortLinkAccessRecordStats(ShortLinkStatsAccessRecordReqDTO requestParam) {
+        LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
+                .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
+                .eq(LinkAccessLogsDO::getFullShortUrl, requestParam.getFullShortUrl())
+                .between(LinkAccessLogsDO::getCreateTime, requestParam.getStartDate(), requestParam.getEndDate())
+                .eq(LinkAccessLogsDO::getDelFlag, 0)
+                .orderByDesc(LinkAccessLogsDO::getCreateTime); // 这个总体的查询条件为：根据gid、fullShortUrl、createTime范围和未删除标志进行过滤，并按创建时间降序排序
+        IPage<LinkAccessLogsDO> pageResult = linkAccessLogsMapper.selectPage(requestParam, queryWrapper); // 分页查询
+        IPage<ShortLinkStatsAccessRecordRespDTO> resultPage = pageResult.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class)); // 把每个LinkAccessLogsDO转换为ShortLinkStatsAccessRecordRespDTO
+        List<String> userAccessLogsList = resultPage.getRecords().stream() // 获取当前页的所有用户列表
+                .map(ShortLinkStatsAccessRecordRespDTO::getUser)
+                .toList();
+        List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectUvTypeByUsers(
+                requestParam.getGid(),
+                requestParam.getFullShortUrl(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate(),
+                userAccessLogsList
+        ); // 批量查询用户访客类型
+        resultPage.getRecords().forEach(each -> each.setUvType(
+                uvTypeList.stream()
+                        .filter(item -> Objects.equals(each.getUser(), item.get("user"))) // 找到对应用户的数据
+                        .findFirst()
+                        .map(item -> item.get("UvType"))
+                        .map(Object::toString)
+                        .orElse("旧访客") // 如果没有数据则为“老访客”
+        ));
+        return resultPage;
     }
 }
