@@ -22,6 +22,7 @@ import com.mercemay.shortlink.project.common.constant.ShortLinkConstant;
 import com.mercemay.shortlink.project.common.convention.exception.ClientException;
 import com.mercemay.shortlink.project.common.convention.exception.ServiceException;
 import com.mercemay.shortlink.project.common.enums.ValidDateTypeEnum;
+import com.mercemay.shortlink.project.config.RouteDomainWhiteListConfiguration;
 import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
 import com.mercemay.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
@@ -85,6 +86,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkStatsTodayMapper linkStatsTodayMapper;
     private final LinkStatsTodayService linkStatsTodayService;
     private final DelayShortLinkStatsProducer delayShortLinkStatsProducer;
+    private final RouteDomainWhiteListConfiguration routeDomainWhiteListConfiguration;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -178,7 +180,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         IPage<ShortLinkDO> resultPage = baseMapper.pageShortLink(requestParam);
         return resultPage.convert(each -> {
             ShortLinkPageRespDTO result = BeanUtil.toBean(each, ShortLinkPageRespDTO.class);
-            result.setFullShortUrl("http://" + each.getFullShortUrl());
+            result.setFullShortUrl(each.getFullShortUrl());
             return result;
         });
     }
@@ -627,5 +629,20 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             }
         }
         return null;
+    }
+
+    private void verifyDomainInWhiteList(String originUrl) {
+        Boolean enable = routeDomainWhiteListConfiguration.getEnable();
+        if (enable == null || !enable) {
+            return;
+        }
+        String domain = LinkUtil.extractDomain(originUrl);
+        if (StrUtil.isBlank(domain)) {
+            throw new ClientException("跳转链接填写错误，请检查后重新填写");
+        }
+        List<String> details = routeDomainWhiteListConfiguration.getDetails();
+        if (!details.contains(domain)) {
+            throw new ClientException("跳转链接域名不在白名单内，请更换后重新填写");
+        }
     }
 }

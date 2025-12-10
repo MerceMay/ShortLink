@@ -26,7 +26,7 @@ public class GroupController {
      * @param requestParm 请求参数
      * @return 结果
      */
-    @PostMapping("/api/short-link/admin/v1/group/")
+    @PostMapping("/api/short-link/admin/v1/group")
     public Result<Void> save(@RequestBody ShortLinkGroupSaveReqDTO requestParm) {
         groupService.saveGroup(requestParm.getName());
         return Results.success();

@@ -2,9 +2,11 @@ package com.mercemay.shortlink.project.util;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.mercemay.shortlink.project.common.constant.ShortLinkConstant;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
 
@@ -121,5 +123,27 @@ public class LinkUtil {
     public static String getNetwork(HttpServletRequest request) {
         String actualIp = getActualIp(request);
         return actualIp.startsWith("192.168.") || actualIp.startsWith("10.") || actualIp.startsWith("172.") ? "WIFI" : "Mobile";
+    }
+
+    /**
+     * 从URL中提取域名
+     *
+     * @param url 完整URL地址
+     * @return 域名
+     */
+    public static String extractDomain(String url) {
+        String domain = null;
+        try {
+            URI uri = new URI(url);
+            String host = uri.getHost();
+            if (StrUtil.isNotBlank(host)) {
+                domain = host;
+                if (domain.startsWith("www.")) {
+                    domain = host.substring(4);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return domain;
     }
 }
