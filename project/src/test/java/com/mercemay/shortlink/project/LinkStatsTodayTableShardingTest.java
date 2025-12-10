@@ -15,7 +15,7 @@ public class LinkStatsTodayTableShardingTest {
                 `update_time`    datetime     DEFAULT NULL COMMENT '修改时间',
                 `del_flag`       tinyint(1)   DEFAULT NULL COMMENT '删除标识 0：未删除 1：已删除',
                 PRIMARY KEY (`id`),
-                UNIQUE KEY `uk_full-short-url` (`full_short_url`, `gid`, `date`) USING BTREE
+                UNIQUE KEY `uk_today_stats` (`full_short_url`, `gid`, `date`) USING BTREE
             ) ENGINE = InnoDB
               DEFAULT CHARSET = utf8mb4;""";
 

@@ -38,7 +38,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
                 .enableStatus(1)
                 .build();
         baseMapper.update(shortLinkDO, updateWrapper);
-        stringRedisTemplate.delete(RedisKeyConstant.ROUTE_SHORT_LINK_KEY + requestParam.getFullShortUrl());
+        stringRedisTemplate.delete(RedisKeyConstant.SHORT_LINK_ROUTE_KEY + requestParam.getFullShortUrl());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
                 .enableStatus(0)
                 .build();
         baseMapper.update(shortLinkDO, updateWrapper);
-        stringRedisTemplate.delete(RedisKeyConstant.ROUTE_NULL_SHORT_LINK_KEY + requestParam.getFullShortUrl()); // 删除缓存，确保恢复后可以正常访问
+        stringRedisTemplate.delete(RedisKeyConstant.SHORT_LINK_NULL_ROUTE_KEY + requestParam.getFullShortUrl()); // 删除缓存，确保恢复后可以正常访问
     }
 
     @Override
@@ -76,7 +76,12 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
                 .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
                 .eq(ShortLinkDO::getGid, requestParam.getGid())
                 .eq(ShortLinkDO::getEnableStatus, 1)
+                .eq(ShortLinkDO::getDelTime, 0L)
                 .eq(ShortLinkDO::getDelFlag, 0);
-        baseMapper.delete(updateWrapper);
+        ShortLinkDO delShortLinkDO = ShortLinkDO.builder()
+                .delTime(System.currentTimeMillis())
+                .build();
+        delShortLinkDO.setDelFlag(1);
+        baseMapper.update(delShortLinkDO, updateWrapper);
     }
 }
