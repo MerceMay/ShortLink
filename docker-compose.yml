@@ -21,3 +21,14 @@ services:
     volumes:
       - ./volumes/redis/data:/data
     restart: always
+
+  nginx:
+    image: nginx:1.25.4
+    container_name: nginx_container
+    ports:
+      - "80:80"
+    volumes:
+      - ./volumes/nginx/conf:/etc/nginx/
+      - ./volumes/nginx/html:/usr/share/nginx/html
+      - ./volumes/nginx/logs:/var/log/nginx
+    restart: always

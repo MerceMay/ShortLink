@@ -43,3 +43,6 @@ build/
 
 ### Redis Volumes ###
 /volumes/redis/data/
+
+### nginx logs ###
+/volumes/nginx/logs/

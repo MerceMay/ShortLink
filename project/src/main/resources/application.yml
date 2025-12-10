@@ -17,6 +17,8 @@ spring:
       suffix: .html
 
 short-link:
+  domain:
+    default: mercemay.com:8001
   stats:
     locale:
       amap-key: 2b3698715ce9c881bd4bfecac7fe940f
