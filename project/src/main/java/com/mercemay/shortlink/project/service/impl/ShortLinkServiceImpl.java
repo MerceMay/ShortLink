@@ -23,12 +23,11 @@ import com.mercemay.shortlink.project.common.convention.exception.ServiceExcepti
 import com.mercemay.shortlink.project.common.enums.ValidDateTypeEnum;
 import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
+import com.mercemay.shortlink.project.dto.req.ShortLinkBatchCreateReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.mercemay.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
-import com.mercemay.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
-import com.mercemay.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
-import com.mercemay.shortlink.project.dto.resp.ShortLinkPageRespDTO;
+import com.mercemay.shortlink.project.dto.resp.*;
 import com.mercemay.shortlink.project.service.ShortLinkService;
 import com.mercemay.shortlink.project.util.HashUtil;
 import com.mercemay.shortlink.project.util.LinkUtil;
@@ -139,6 +138,34 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     }
 
     @Override
+    public ShortLinkBatchCreateRespDTO batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam) {
+        List<String> originUrls = requestParam.getOriginUrls();
+        List<String> describes = requestParam.getDescribes();
+        List<ShortLinkBaseInfoRespDTO> result = new ArrayList<>();
+        for (int i = 0; i < originUrls.size(); i++) {
+            ShortLinkCreateReqDTO shortLinkCreateReqDTO = BeanUtil.toBean(requestParam, ShortLinkCreateReqDTO.class);
+            shortLinkCreateReqDTO.setOriginUrl(originUrls.get(i));
+            shortLinkCreateReqDTO.setDescribe(describes.get(i));
+            try {
+                ShortLinkCreateRespDTO shortLinkCreateRespDTO = createShortLink(shortLinkCreateReqDTO);
+                result.add(
+                        ShortLinkBaseInfoRespDTO.builder()
+                                .fullShortUrl(shortLinkCreateRespDTO.getFullShortUrl())
+                                .originUrl(shortLinkCreateRespDTO.getOriginUrl())
+                                .describe(describes.get(i))
+                                .build()
+                );
+            } catch (Throwable ex) {
+                log.error("批量创建短链接异常，原始链接：{}", originUrls.get(i));
+            }
+        }
+        return ShortLinkBatchCreateRespDTO.builder()
+                .total(result.size())
+                .baseLinkInfos(result)
+                .build();
+    }
+
+    @Override
     public IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkPageReqDTO requestParam) {
         IPage<ShortLinkDO> resultPage = baseMapper.pageShortLink(requestParam);
         return resultPage.convert(each -> {
@@ -200,6 +227,15 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkDO::getDelFlag, 0);
             baseMapper.delete(updateWrapper);
             baseMapper.insert(shortLinkDO);
+        }
+        if (!Objects.equals(existingShortLink.getValidDateType(), requestParam.getValidDateType())
+                || !Objects.equals(existingShortLink.getValidDate(), requestParam.getValidDate())) {
+            stringRedisTemplate.delete(String.format(RedisKeyConstant.ROUTE_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
+            if (existingShortLink.getValidDate() != null && existingShortLink.getValidDate().before(new Date())) {
+                if (Objects.equals(requestParam.getValidDateType(), ValidDateTypeEnum.PERMANENT.getType()) || requestParam.getValidDate().after(new Date())) {
+                    stringRedisTemplate.delete(String.format(RedisKeyConstant.ROUTE_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
+                }
+            }
         }
     }
 
