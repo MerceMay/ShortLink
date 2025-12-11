@@ -2,6 +2,8 @@ server:
   port: 8001
 
 spring:
+  application:
+    name: short-link-project
   datasource:
     # ShardingSphere 实现分库分表配置
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
@@ -15,6 +17,10 @@ spring:
     view:
       prefix: /templates/
       suffix: .html
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8964
 
 short-link:
   domain:

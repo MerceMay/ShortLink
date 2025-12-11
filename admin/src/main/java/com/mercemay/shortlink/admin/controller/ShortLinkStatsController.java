@@ -1,6 +1,6 @@
 package com.mercemay.shortlink.admin.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.remote.ShortLinkRemoteService;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
@@ -18,11 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ShortLinkStatsController {
-    /**
-     * TODO 后续重构为 FeignClient 方式调用
-     */
-    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
-    };
+    private final ShortLinkRemoteService shortLinkRemoteService;
 
     /**
      * 访问单个短链接指定时间内监控数据
@@ -32,7 +28,10 @@ public class ShortLinkStatsController {
      */
     @GetMapping("/api/short-link/admin/v1/stats")
     public Result<ShortLinkStatsRespDTO> getShortLinkStats(ShortLinkStatsReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkStats(requestParam);
+        return shortLinkRemoteService.getShortLinkStats(requestParam.getFullShortUrl(),
+                requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate());
     }
 
     /**
@@ -43,7 +42,9 @@ public class ShortLinkStatsController {
      */
     @GetMapping("/api/short-link/admin/v1/stats/group")
     public Result<ShortLinkStatsRespDTO> getShortLinkGroupStats(ShortLinkGroupStatsReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkGroupStats(requestParam);
+        return shortLinkRemoteService.getShortLinkGroupStats(requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate());
     }
 
     /**
@@ -53,8 +54,11 @@ public class ShortLinkStatsController {
      * @return 短链接访问记录监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats/access-record")
-    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkAccessRecordStats(requestParam);
+    public Result<Page<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsReqDTO requestParam) {
+        return shortLinkRemoteService.getShortLinkAccessRecordStats(requestParam.getFullShortUrl(),
+                requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate());
     }
 
     /**
@@ -64,7 +68,9 @@ public class ShortLinkStatsController {
      * @return 短链接分组访问记录监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats/access-record/group")
-    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> getShortLinkGroupAccessRecordStats(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkGroupAccessRecordStats(requestParam);
+    public Result<Page<ShortLinkStatsAccessRecordRespDTO>> getShortLinkGroupAccessRecordStats(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        return shortLinkRemoteService.getShortLinkGroupAccessRecordStats(requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate());
     }
 }

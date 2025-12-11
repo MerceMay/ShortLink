@@ -2,8 +2,8 @@ package com.mercemay.shortlink.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mercemay.shortlink.admin.common.biz.user.UserContext;
 import com.mercemay.shortlink.admin.common.convention.exception.ServiceException;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
@@ -25,15 +25,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecycleBinServiceImpl implements RecycleBinService {
     private final GroupMapper groupMapper;
-    /**
-     * TODO 后续重构为 FeignClient 方式调用
-     */
-    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
-    };
+    private final ShortLinkRemoteService shortLinkRemoteService;
 
 
     @Override
-    public Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParm) {
+    public Result<Page<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParm) {
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getUsername, UserContext.getUserName())
                 .eq(GroupDO::getDelFlag, 0);
@@ -42,6 +38,8 @@ public class RecycleBinServiceImpl implements RecycleBinService {
             throw new ServiceException("当前用户未创建任何分组，无法查询短链接");
         }
         requestParm.setGidList(groupDOList.stream().map(GroupDO::getGid).toList());
-        return shortLinkRemoteService.pageRecycleBinShortLink(requestParm);
+        return shortLinkRemoteService.pageRecycleBinShortLink(requestParm.getGidList(),
+                requestParm.getCurrent(),
+                requestParm.getSize());
     }
 }
