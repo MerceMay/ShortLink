@@ -3,8 +3,6 @@ package com.mercemay.shortlink.admin.common.enums;
 import com.mercemay.shortlink.admin.common.convention.errorcode.IErrorCode;
 
 public enum UserErrorCodeEnum implements IErrorCode {
-    USER_TOKEN_FAILED("A000200", "用户令牌校验失败"),
-
     USER_NULL("B000200", "用户不存在"),
 
     USER_NAME_EXIST("B000201", "用户名已存在"),
@@ -17,8 +15,7 @@ public enum UserErrorCodeEnum implements IErrorCode {
 
     USER_HAVE_LOGIN("B000205", "用户已登录"),
 
-    USER_NOT_LOGIN("B000206", "用户未登录")
-    ;
+    USER_NOT_LOGIN("B000206", "用户未登录");
 
     private final String code;
 

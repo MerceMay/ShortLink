@@ -21,7 +21,7 @@ import java.util.List;
  * 短链实际远程服务接口
  */
 @FeignClient("short-link-project")
-public interface ShortLinkRemoteService {
+public interface ShortLinkActualRemoteService {
 
     /**
      * 创建短链接

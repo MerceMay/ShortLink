@@ -108,29 +108,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (userDO == null) {
             throw new ClientException(UserErrorCodeEnum.USER_NOT_EXIST);
         }
-        Map<Object, Object> hasLoginMap = stringRedisTemplate.opsForHash().entries("login:" + requestParam.getUsername());
+        Map<Object, Object> hasLoginMap = stringRedisTemplate.opsForHash().entries(RedisCacheConstant.USER_LOGIN_KEY + requestParam.getUsername());
         if (CollUtil.isNotEmpty(hasLoginMap)) {
+            stringRedisTemplate.expire(RedisCacheConstant.USER_LOGIN_KEY + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
             String token = hasLoginMap.keySet().stream()
                     .findFirst()
                     .map(Object::toString)
-                    .orElseThrow(() -> new ClientException(UserErrorCodeEnum.USER_TOKEN_FAILED));
+                    .orElseThrow(() -> new ClientException("用户登录异常"));
             return new UserLoginRespDTO(token);
         }
         String token = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForHash().put("login:" + requestParam.getUsername(), token, JSON.toJSONString(userDO));
-        stringRedisTemplate.expire("login:" + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForHash().put(RedisCacheConstant.USER_LOGIN_KEY + requestParam.getUsername(), token, JSON.toJSONString(userDO));
+        stringRedisTemplate.expire(RedisCacheConstant.USER_LOGIN_KEY + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
         return new UserLoginRespDTO(token);
     }
 
     @Override
     public Boolean checkLogin(String username, String token) {
-        return stringRedisTemplate.opsForHash().get("login:" + username, token) != null;
+        return stringRedisTemplate.opsForHash().get(RedisCacheConstant.USER_LOGIN_KEY + username, token) != null;
     }
 
     @Override
     public void logout(String username, String token) {
         if (checkLogin(username, token)) {
-            stringRedisTemplate.delete("login:" + username);
+            stringRedisTemplate.delete(RedisCacheConstant.USER_LOGIN_KEY + username);
             return;
         }
         throw new ClientException(UserErrorCodeEnum.USER_NOT_LOGIN);

@@ -13,4 +13,9 @@ public class RedisCacheConstant {
      * 分组创建锁
      */
     public static final String GROUP_CREATE_LOCK = "shortlink:lock:group:create:";
+
+    /**
+     * 用户登录缓存前缀
+     */
+    public static final String USER_LOGIN_KEY = "shortlink:login:";
 }
