@@ -1,5 +1,6 @@
 package com.mercemay.shortlink.project.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.mercemay.shortlink.project.common.convention.result.Result;
 import com.mercemay.shortlink.project.common.convention.result.Results;
@@ -11,6 +12,7 @@ import com.mercemay.shortlink.project.dto.resp.ShortLinkBatchCreateRespDTO;
 import com.mercemay.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.mercemay.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.mercemay.shortlink.project.dto.resp.ShortLinkPageRespDTO;
+import com.mercemay.shortlink.project.handler.CustomBlockHandler;
 import com.mercemay.shortlink.project.service.ShortLinkService;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -47,6 +49,11 @@ public class ShortLinkController {
      * @return 结果
      */
     @PostMapping("/api/short-link/v1/create")
+    @SentinelResource(
+            value = "create_short_link",
+            blockHandler = "createShortLinkBlockHandlerMethod",
+            blockHandlerClass = CustomBlockHandler.class
+    )
     public Result<ShortLinkCreateRespDTO> createShortLinkGroup(@RequestBody ShortLinkCreateReqDTO requestParam) {
         return Results.success(shortLinkService.createShortLink(requestParam));
     }
