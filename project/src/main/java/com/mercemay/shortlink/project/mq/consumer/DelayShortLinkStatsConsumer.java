@@ -1,9 +1,12 @@
 package com.mercemay.shortlink.project.mq.consumer;
 
 import com.mercemay.shortlink.project.common.constant.RedisKeyConstant;
+import com.mercemay.shortlink.project.common.convention.exception.ServiceException;
 import com.mercemay.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
+import com.mercemay.shortlink.project.mq.idempotent.MessageQueueIdempotentHandler;
 import com.mercemay.shortlink.project.service.ShortLinkService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingDeque;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RedissonClient;
@@ -16,11 +19,13 @@ import java.util.concurrent.locks.LockSupport;
 /**
  * 延迟短链接统计消息消费者
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DelayShortLinkStatsConsumer implements InitializingBean {
     private final RedissonClient redissonClient;
     private final ShortLinkService shortLinkService;
+    private final MessageQueueIdempotentHandler messageQueueIdempotentHandler;
 
     public void onMessage() {
         Executors.newSingleThreadExecutor(
@@ -37,7 +42,19 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
                         try {
                             ShortLinkStatsRecordDTO statsRecordDTO = delayedQueue.poll(); // 获取并移除队列头部元素，若无元素则阻塞等待
                             if (statsRecordDTO != null) {
-                                shortLinkService.shortLinkStats(null, null, statsRecordDTO); // 处理短链接统计逻辑
+                                if (!messageQueueIdempotentHandler.isMessageProcessed(statsRecordDTO.getKeys())) {
+                                    if (messageQueueIdempotentHandler.isAccomplish(statsRecordDTO.getKeys())) {
+                                        return;
+                                    }
+                                    throw new ServiceException("消息未完成流程，需要消息队列重试");
+                                }
+                                try {
+                                    shortLinkService.shortLinkStats(null, null, statsRecordDTO); // 处理短链接统计逻辑
+                                } catch (Throwable ex) {
+                                    messageQueueIdempotentHandler.delMessageIdempotentKey(statsRecordDTO.getKeys()); // 异常处理，删除幂等标识
+                                    log.error(ex.getMessage(), ex);
+                                }
+                                messageQueueIdempotentHandler.markMessageAsAccomplish(statsRecordDTO.getKeys()); // 标记消息已完成
                                 continue;
                             }
                             LockSupport.parkUntil(500); // 阻塞当前线程500毫秒，避免空轮询

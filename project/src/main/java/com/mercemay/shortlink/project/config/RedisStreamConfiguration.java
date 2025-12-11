@@ -1,15 +1,15 @@
 package com.mercemay.shortlink.project.config;
 
+import com.mercemay.shortlink.project.common.constant.RedisKeyConstant;
 import com.mercemay.shortlink.project.mq.consumer.ShortLinkStatsSaveConsumer;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.stream.*;
-import org.springframework.data.redis.core.StreamOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.connection.stream.Consumer;
+import org.springframework.data.redis.connection.stream.MapRecord;
+import org.springframework.data.redis.connection.stream.ReadOffset;
+import org.springframework.data.redis.connection.stream.StreamOffset;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 
 import java.time.Duration;
@@ -24,13 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RedisStreamConfiguration {
 
     private final RedisConnectionFactory redisConnectionFactory;
-    private final StringRedisTemplate stringRedisTemplate;
     private final ShortLinkStatsSaveConsumer shortLinkStatsSaveConsumer;
-
-    @Value("${spring.data.redis.channel-topic.short-link-stats}")
-    private String topic;
-    @Value("${spring.data.redis.channel-topic.short-link-stats-group}")
-    private String group;
 
     @Bean
     public ExecutorService asyncStreamConsumer() {
@@ -50,27 +44,6 @@ public class RedisStreamConfiguration {
         );
     }
 
-    @PostConstruct
-    public void init() {
-        StreamOperations<String, Object, Object> streamOperations = stringRedisTemplate.opsForStream();
-
-        // 检查 Stream 是否存在
-        if (stringRedisTemplate.hasKey(topic)) {
-            // 获取现有的 Group 列表
-            StreamInfo.XInfoGroups groups = streamOperations.groups(topic);
-            // 检查我们的 group 是否在列表中
-            boolean groupExists = groups.stream()
-                    .anyMatch(g -> group.equals(g.groupName())); // 修正点：使用 g.groupName()
-
-            if (!groupExists) {
-                streamOperations.createGroup(topic, group);
-            }
-        } else {
-            // Stream 不存在，自动创建 Stream 和 Group，从 0 开始读取
-            streamOperations.createGroup(topic, ReadOffset.from("0"), group);
-        }
-    }
-
     @Bean(initMethod = "start", destroyMethod = "stop")
     public StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer(ExecutorService asyncStreamConsumer) {
         StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, String>> options =
@@ -81,6 +54,8 @@ public class RedisStreamConfiguration {
                         .build();
         StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer =
                 StreamMessageListenerContainer.create(redisConnectionFactory, options);
+        String topic = RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY;
+        String group = RedisKeyConstant.SHORT_LINK_STATS_STREAM_CONSUMER_GROUP_KEY;
         streamMessageListenerContainer.receiveAutoAck(Consumer.from(group, "stats_consumer"),
                 StreamOffset.create(topic, ReadOffset.lastConsumed()),
                 shortLinkStatsSaveConsumer);

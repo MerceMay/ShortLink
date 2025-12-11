@@ -10,9 +10,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.mercemay.shortlink.project.common.constant.RedisKeyConstant;
 import com.mercemay.shortlink.project.common.constant.ShortLinkConstant;
+import com.mercemay.shortlink.project.common.convention.exception.ServiceException;
 import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
 import com.mercemay.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
+import com.mercemay.shortlink.project.mq.idempotent.MessageQueueIdempotentHandler;
 import com.mercemay.shortlink.project.mq.producer.DelayShortLinkStatsProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,7 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
     private final LinkStatsTodayMapper linkStatsTodayMapper;
     private final DelayShortLinkStatsProducer delayShortLinkStatsProducer;
     private final StringRedisTemplate stringRedisTemplate;
-
+    private final MessageQueueIdempotentHandler messageQueueIdempotentHandler;
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
 
@@ -53,14 +55,26 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
     public void onMessage(MapRecord<String, String, String> message) { // 这三个String分别表示stream key value
         String stream = message.getStream(); // 获取第一个String，也就是stream的名称
         RecordId id = message.getId(); // 获取消息ID
-        Map<String, String> valueMap = message.getValue(); // 获取消息内容
-        String fullShortUrl = valueMap.get("fullShortUrl");
-        if (StrUtil.isNotBlank(fullShortUrl)) {
-            String gid = valueMap.get("gid");
-            ShortLinkStatsRecordDTO shortLinkStatsRecordDTO = JSON.parseObject(valueMap.get("shortLinkStatsRecord"), ShortLinkStatsRecordDTO.class);
-            processMessage(fullShortUrl, gid, shortLinkStatsRecordDTO);
+        if (messageQueueIdempotentHandler.isMessageProcessed(id.toString())) {
+            if (messageQueueIdempotentHandler.isAccomplish(id.toString())) {
+                return;
+            }
+            throw new ServiceException("消息未完成流程，需要消息队列重试");
         }
-        stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue()); // 删除已处理的消息
+        try {
+            Map<String, String> valueMap = message.getValue(); // 获取消息内容
+            String fullShortUrl = valueMap.get("fullShortUrl");
+            if (StrUtil.isNotBlank(fullShortUrl)) {
+                String gid = valueMap.get("gid");
+                ShortLinkStatsRecordDTO shortLinkStatsRecordDTO = JSON.parseObject(valueMap.get("shortLinkStatsRecord"), ShortLinkStatsRecordDTO.class);
+                processMessage(fullShortUrl, gid, shortLinkStatsRecordDTO);
+            }
+            stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue()); // 删除已处理的消息
+        } catch (Throwable ex) {
+            messageQueueIdempotentHandler.delMessageIdempotentKey(id.toString());
+            log.error("记录短链接访问量消息处理失败，消息ID：{}", id.toString(), ex);
+        }
+        messageQueueIdempotentHandler.markMessageAsAccomplish(id.toString());
     }
 
     public void processMessage(String fullShortUrl, String gid, ShortLinkStatsRecordDTO shortLinkStatsRecord) {
@@ -73,24 +87,16 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
         }
         try {
             if (StrUtil.isBlank(gid)) {
-                LambdaQueryWrapper<ShortLinkRouteDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkRouteDO.class)
-                        .eq(ShortLinkRouteDO::getFullShortUrl, fullShortUrl);
+                LambdaQueryWrapper<ShortLinkRouteDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkRouteDO.class).eq(ShortLinkRouteDO::getFullShortUrl, fullShortUrl);
                 ShortLinkRouteDO shortLinkRouteDO = shortLinkRouteMapper.selectOne(queryWrapper);
                 gid = shortLinkRouteDO.getGid();
             }
             int hour = DateUtil.hour(new Date(), true);
             Week week = DateUtil.dayOfWeekEnum(new Date());
             int weekValue = week.getIso8601Value();
-            LinkAccessStatsDO linkAccessStatsDO = LinkAccessStatsDO.builder()
-                    .pv(1)
-                    .uv(shortLinkStatsRecord.getUvFirstFlag() ? 1 : 0) // 只有在首次访问时才计为1
+            LinkAccessStatsDO linkAccessStatsDO = LinkAccessStatsDO.builder().pv(1).uv(shortLinkStatsRecord.getUvFirstFlag() ? 1 : 0) // 只有在首次访问时才计为1
                     .uip(shortLinkStatsRecord.getUipFirstFlag() ? 1 : 0) // 只有在首次访问时才计为1
-                    .hour(hour)
-                    .weekday(weekValue)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .date(new Date())
-                    .build();
+                    .hour(hour).weekday(weekValue).fullShortUrl(fullShortUrl).gid(gid).date(new Date()).build();
             linkAccessStatsMapper.shortLinkStats(linkAccessStatsDO);
             Map<String, Object> localeParamMap = new HashMap<>(); // 位置统计参数
             localeParamMap.put("key", statsLocaleAmapKey);
@@ -103,71 +109,21 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
             if (StrUtil.isNotBlank(infoCode) && StrUtil.equals(infoCode, "10000")) {
                 String province = localeResultObj.getString("province");
                 boolean unknownFlag = StrUtil.equals(province, "[]");
-                LinkLocaleStatsDO linkLocaleStatsDO = LinkLocaleStatsDO.builder()
-                        .province(actualProvince = unknownFlag ? actualProvince : province)
-                        .city(actualCity = unknownFlag ? actualCity : localeResultObj.getString("city"))
-                        .adcode(unknownFlag ? "未知" : localeResultObj.getString("adcode"))
-                        .cnt(1)
-                        .fullShortUrl(fullShortUrl)
-                        .country("中国")
-                        .gid(gid)
-                        .date(new Date())
-                        .build();
+                LinkLocaleStatsDO linkLocaleStatsDO = LinkLocaleStatsDO.builder().province(actualProvince = unknownFlag ? actualProvince : province).city(actualCity = unknownFlag ? actualCity : localeResultObj.getString("city")).adcode(unknownFlag ? "未知" : localeResultObj.getString("adcode")).cnt(1).fullShortUrl(fullShortUrl).country("中国").gid(gid).date(new Date()).build();
                 linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
             }
-            LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
-                    .os(shortLinkStatsRecord.getOs())
-                    .cnt(1)
-                    .gid(gid)
-                    .fullShortUrl(fullShortUrl)
-                    .date(new Date())
-                    .build();
+            LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder().os(shortLinkStatsRecord.getOs()).cnt(1).gid(gid).fullShortUrl(fullShortUrl).date(new Date()).build();
             linkOsStatsMapper.shortLinkOsStats(linkOsStatsDO);
-            LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
-                    .browser(shortLinkStatsRecord.getBrowser())
-                    .cnt(1)
-                    .gid(gid)
-                    .fullShortUrl(fullShortUrl)
-                    .date(new Date())
-                    .build();
+            LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder().browser(shortLinkStatsRecord.getBrowser()).cnt(1).gid(gid).fullShortUrl(fullShortUrl).date(new Date()).build();
             linkBrowserStatsMapper.shortLinkBrowserStats(linkBrowserStatsDO);
-            LinkDeviceStatsDO linkDeviceStatsDO = LinkDeviceStatsDO.builder()
-                    .device(shortLinkStatsRecord.getDevice())
-                    .cnt(1)
-                    .gid(gid)
-                    .fullShortUrl(fullShortUrl)
-                    .date(new Date())
-                    .build();
+            LinkDeviceStatsDO linkDeviceStatsDO = LinkDeviceStatsDO.builder().device(shortLinkStatsRecord.getDevice()).cnt(1).gid(gid).fullShortUrl(fullShortUrl).date(new Date()).build();
             linkDeviceStatsMapper.shortLinkDeviceStats(linkDeviceStatsDO);
-            LinkNetworkStatsDO linkNetworkStatsDO = LinkNetworkStatsDO.builder()
-                    .network(shortLinkStatsRecord.getNetwork())
-                    .cnt(1)
-                    .gid(gid)
-                    .fullShortUrl(fullShortUrl)
-                    .date(new Date())
-                    .build();
+            LinkNetworkStatsDO linkNetworkStatsDO = LinkNetworkStatsDO.builder().network(shortLinkStatsRecord.getNetwork()).cnt(1).gid(gid).fullShortUrl(fullShortUrl).date(new Date()).build();
             linkNetworkStatsMapper.shortLinkNetworkStats(linkNetworkStatsDO);
-            LinkAccessLogsDO linkAccessLogsDO = LinkAccessLogsDO.builder()
-                    .user(shortLinkStatsRecord.getUv())
-                    .ip(shortLinkStatsRecord.getRemoteAddr())
-                    .browser(shortLinkStatsRecord.getBrowser())
-                    .os(shortLinkStatsRecord.getOs())
-                    .network(shortLinkStatsRecord.getNetwork())
-                    .device(shortLinkStatsRecord.getDevice())
-                    .locale(StrUtil.join("-", "中国", actualProvince, actualCity))
-                    .gid(gid)
-                    .fullShortUrl(fullShortUrl)
-                    .build();
+            LinkAccessLogsDO linkAccessLogsDO = LinkAccessLogsDO.builder().user(shortLinkStatsRecord.getUv()).ip(shortLinkStatsRecord.getRemoteAddr()).browser(shortLinkStatsRecord.getBrowser()).os(shortLinkStatsRecord.getOs()).network(shortLinkStatsRecord.getNetwork()).device(shortLinkStatsRecord.getDevice()).locale(StrUtil.join("-", "中国", actualProvince, actualCity)).gid(gid).fullShortUrl(fullShortUrl).build();
             linkAccessLogsMapper.insert(linkAccessLogsDO);
             shortLinkMapper.incrementStats(gid, fullShortUrl, 1, shortLinkStatsRecord.getUvFirstFlag() ? 1 : 0, shortLinkStatsRecord.getUipFirstFlag() ? 1 : 0);
-            LinkStatsTodayDO linkStatsTodayDO = LinkStatsTodayDO.builder()
-                    .todayPv(1)
-                    .todayUv(shortLinkStatsRecord.getUvFirstFlag() ? 1 : 0)
-                    .todayUip(shortLinkStatsRecord.getUipFirstFlag() ? 1 : 0)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .date(new Date())
-                    .build();
+            LinkStatsTodayDO linkStatsTodayDO = LinkStatsTodayDO.builder().todayPv(1).todayUv(shortLinkStatsRecord.getUvFirstFlag() ? 1 : 0).todayUip(shortLinkStatsRecord.getUipFirstFlag() ? 1 : 0).fullShortUrl(fullShortUrl).gid(gid).date(new Date()).build();
             linkStatsTodayMapper.shortLinkTodayState(linkStatsTodayDO);
         } catch (Throwable ex) {
             log.error("短链接访问量统计异常", ex);

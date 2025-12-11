@@ -38,4 +38,19 @@ public class RedisKeyConstant {
      * 短链接延迟队列 Key
      */
     public static final String SHORT_LINK_DELAY_QUEUE_KEY = "shortlink:delay_queue:stats";
+
+    /**
+     * 幂等标识 Key 前缀
+     */
+    public static final String MESSAGE_QUEUE_IDEMPOTENT_KEY = "shortlink:mq:idempotent:";
+
+    /**
+     * 短链接统计流 Topic Key
+     */
+    public static final String SHORT_LINK_STATS_STREAM_TOPIC_KEY = "shortlink:stream:stats";
+
+    /**
+     * 短链接统计消费组 Key
+     */
+    public static final String SHORT_LINK_STATS_STREAM_CONSUMER_GROUP_KEY = "shortlink:stream:stats:group";
 }

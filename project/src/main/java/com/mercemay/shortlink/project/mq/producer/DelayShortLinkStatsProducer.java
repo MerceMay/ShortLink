@@ -1,5 +1,6 @@
 package com.mercemay.shortlink.project.mq.producer;
 
+import cn.hutool.core.lang.UUID;
 import com.mercemay.shortlink.project.common.constant.RedisKeyConstant;
 import com.mercemay.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class DelayShortLinkStatsProducer {
      * @param shortLinkStatsRecordDTO 短链接统计记录DTO
      */
     public void send(ShortLinkStatsRecordDTO shortLinkStatsRecordDTO) {
+        shortLinkStatsRecordDTO.setKeys(UUID.fastUUID().toString());
         RBlockingDeque<ShortLinkStatsRecordDTO> blockingDeque = redissonClient.getBlockingDeque(RedisKeyConstant.SHORT_LINK_DELAY_QUEUE_KEY);
         RDelayedQueue<ShortLinkStatsRecordDTO> delayedQueue = redissonClient.getDelayedQueue(blockingDeque);
         // 将短链接统计记录添加到延迟队列，延迟5秒后可被消费

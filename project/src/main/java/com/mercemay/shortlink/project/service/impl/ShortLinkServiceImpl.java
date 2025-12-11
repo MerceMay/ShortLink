@@ -86,6 +86,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Value("${short-link.domain.default}")
     private String createShortLinkDefaultDomain;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
         String shortLinkSuffix = generateSuffix(requestParam);
@@ -118,13 +119,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             baseMapper.insert(shortLinkDO);
             shortLinkRouteMapper.insert(shortLinkRouteDO);
         } catch (DuplicateKeyException e) {
-            LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
-                    .eq(ShortLinkDO::getFullShortUrl, fullShortUrl);
-            ShortLinkDO existingShortLink = baseMapper.selectOne(queryWrapper);
-            if (existingShortLink != null) {
-                log.warn("短链接：{} 已存在", fullShortUrl);
-                throw new ServiceException("短链接已存在，请稍后重试");
-            }
+            throw new ServiceException("短链接已存在，请重试生成");
         }
         stringRedisTemplate.opsForValue().set(
                 RedisKeyConstant.SHORT_LINK_ROUTE_KEY + fullShortUrl,
@@ -490,7 +485,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException("短链接生成失败，请稍后重试");
             }
             String originUrl = requestParam.getOriginUrl();
-            originUrl += System.currentTimeMillis();
+            originUrl += UUID.randomUUID().toString();
             shortUri = HashUtil.hashToBase62(originUrl);
             if (!shortUriCreateCachePenetrationBloomFilter.contains(createShortLinkDefaultDomain + "/" + shortUri)) {
                 break;
