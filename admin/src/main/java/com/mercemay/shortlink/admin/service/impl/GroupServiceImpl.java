@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mercemay.shortlink.admin.common.biz.user.UserContext;
+import com.mercemay.shortlink.admin.common.constant.RedisCacheConstant;
+import com.mercemay.shortlink.admin.common.convention.exception.ClientException;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.dao.entity.GroupDO;
 import com.mercemay.shortlink.admin.dao.mapper.GroupMapper;
@@ -17,7 +19,11 @@ import com.mercemay.shortlink.admin.remote.ShortLinkRemoteService;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.mercemay.shortlink.admin.service.GroupService;
 import com.mercemay.shortlink.admin.util.RandomGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -31,7 +37,13 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
+
+    private final RedissonClient redissonClient;
+
+    @Value("${short-link.group.max-num}")
+    private Integer groupMaxNum;
 
     /**
      * TODO 后续重构为 FeignClient 方式调用
@@ -46,17 +58,30 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
 
     @Override
     public void saveGroup(String username, String groupName) {
-        String gid = RandomGenerator.generateRandom();
-        while (hadGid(username, gid)) { // 检查gid是否存在，如果存在则重新生成
-            gid = RandomGenerator.generateRandom();
+        RLock lock = redissonClient.getLock(RedisCacheConstant.GROUP_CREATE_LOCK + username);
+        lock.lock();
+        try {
+            LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
+                    .eq(GroupDO::getUsername, username)
+                    .eq(GroupDO::getDelFlag, 0);
+            List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
+            if (CollUtil.isNotEmpty(groupDOList) && groupDOList.size() >= groupMaxNum) {
+                throw new ClientException("短链接分组数量已达上限，无法新增");
+            }
+            String gid = RandomGenerator.generateRandom();
+            while (hadGid(username, gid)) { // 检查gid是否存在，如果存在则重新生成
+                gid = RandomGenerator.generateRandom();
+            }
+            GroupDO groupDO = GroupDO.builder()
+                    .gid(gid)
+                    .name(groupName)
+                    .sortOrder(0)
+                    .username(username)
+                    .build();
+            baseMapper.insert(groupDO);
+        } finally {
+            lock.unlock();
         }
-        GroupDO groupDO = GroupDO.builder()
-                .gid(gid)
-                .name(groupName)
-                .sortOrder(0)
-                .username(username)
-                .build();
-        baseMapper.insert(groupDO);
     }
 
     @Override

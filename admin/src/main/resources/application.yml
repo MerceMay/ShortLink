@@ -11,3 +11,11 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+short-link:
+  group:
+    max-num: 20
+  user-traffic-control:
+    enabled: true
+    time-window: 1
+    max-requests: 20
