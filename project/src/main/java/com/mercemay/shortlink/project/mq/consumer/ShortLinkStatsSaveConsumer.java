@@ -14,7 +14,6 @@ import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
 import com.mercemay.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
 import com.mercemay.shortlink.project.mq.idempotent.MessageQueueIdempotentHandler;
-import com.mercemay.shortlink.project.mq.producer.DelayShortLinkStatsProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -44,7 +43,6 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
     private final LinkStatsTodayMapper linkStatsTodayMapper;
-    private final DelayShortLinkStatsProducer delayShortLinkStatsProducer;
     private final StringRedisTemplate stringRedisTemplate;
     private final MessageQueueIdempotentHandler messageQueueIdempotentHandler;
     @Value("${short-link.stats.locale.amap-key}")
@@ -73,6 +71,7 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
         } catch (Throwable ex) {
             messageQueueIdempotentHandler.delMessageIdempotentKey(id.toString());
             log.error("记录短链接访问量消息处理失败，消息ID：{}", id.toString(), ex);
+            throw ex;
         }
     }
 
@@ -80,10 +79,7 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
         fullShortUrl = Optional.ofNullable(fullShortUrl).orElse(shortLinkStatsRecord.getFullShortUrl());
         RReadWriteLock readWriteLock = redissonClient.getReadWriteLock(RedisKeyConstant.SHORT_LINK_UPDATE_GID_LOCK + fullShortUrl);
         RLock rLock = readWriteLock.readLock(); // 获取读锁
-        if (!rLock.tryLock()) {
-            delayShortLinkStatsProducer.send(shortLinkStatsRecord); // 获取读锁失败，说明有写操作在进行，异步处理统计数据
-            return;
-        }
+        rLock.lock();
         try {
             if (StrUtil.isBlank(gid)) {
                 LambdaQueryWrapper<ShortLinkRouteDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkRouteDO.class).eq(ShortLinkRouteDO::getFullShortUrl, fullShortUrl);

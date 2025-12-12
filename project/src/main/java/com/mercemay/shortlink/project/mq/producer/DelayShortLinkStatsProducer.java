@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  * 延迟短链接统计消息生产者
  */
 @Component
+@Deprecated
 @RequiredArgsConstructor
 public class DelayShortLinkStatsProducer {
     private final RedissonClient redissonClient;

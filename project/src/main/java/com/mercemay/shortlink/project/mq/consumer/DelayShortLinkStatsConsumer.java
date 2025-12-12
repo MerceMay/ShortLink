@@ -19,6 +19,7 @@ import java.util.concurrent.locks.LockSupport;
 /**
  * 延迟短链接统计消息消费者
  */
+@Deprecated
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -66,6 +67,6 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        onMessage();
+        // onMessage();
     }
 }

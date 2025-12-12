@@ -278,9 +278,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         } else { // 如果分组变化了，需要加分布式锁，防止并发修改
             RReadWriteLock readWriteLock = redissonClient.getReadWriteLock(RedisKeyConstant.SHORT_LINK_UPDATE_GID_LOCK + requestParam.getFullShortUrl()); // 获取分布式读写锁
             RLock rLock = readWriteLock.writeLock(); // 获取写锁
-            if (!rLock.tryLock()) {
-                throw new ServiceException("短链接正在被修改，请稍后重试"); // 尝试获取锁失败，说明有其他线程正在修改，抛出异常
-            }
+            rLock.lock();
             try {
                 LambdaUpdateWrapper<ShortLinkDO> updateWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
                         .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
