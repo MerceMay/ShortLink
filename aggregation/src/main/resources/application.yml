@@ -1,0 +1,49 @@
+server:
+  port: 8003
+
+spring:
+  application:
+    name: short-link-aggregation
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    url: jdbc:shardingsphere:classpath:shardingsphere-config-${database.env:dev}.yml
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8964
+
+aggregation:
+  remote-url: http://127.0.0.1:${server.port}
+
+short-link:
+  group:
+    max-num: 20
+  user-traffic-control:
+    enabled: true
+    time-window: 1
+    max-requests: 20
+  domain:
+    default: mercemay.com:8003
+  stats:
+    locale:
+      amap-key: 2b3698715ce9c881bd4bfecac7fe940f
+  route:
+    whitelist:
+      enabled: true
+      name: '??,????'
+      details:
+        - zhihu.com
+        - bilibili.com
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml

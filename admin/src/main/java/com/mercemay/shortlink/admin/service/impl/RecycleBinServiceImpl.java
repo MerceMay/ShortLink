@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 回收站服务实现类
  */
-@Service
+@Service(value = "recycleBinServiceByAdmin")
 @RequiredArgsConstructor
 public class RecycleBinServiceImpl implements RecycleBinService {
     private final GroupMapper groupMapper;
