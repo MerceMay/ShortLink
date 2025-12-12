@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.mercemay.shortlink.gateway.config.Config;
 import com.mercemay.shortlink.gateway.dto.GatewayErrorResult;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBufferFactory;
@@ -26,9 +25,14 @@ import java.util.Objects;
  * Token 校验过滤器工厂
  */
 @Component
-@RequiredArgsConstructor
 public class TokenValidateGatewayFilterFactory extends AbstractGatewayFilterFactory<Config> {
     private final StringRedisTemplate stringRedisTemplate;
+
+    public TokenValidateGatewayFilterFactory(StringRedisTemplate stringRedisTemplate) {
+        super(Config.class);
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
     private static final String USER_LOGIN_KEY = "shortlink:login:";
 
     @Override

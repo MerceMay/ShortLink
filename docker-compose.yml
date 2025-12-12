@@ -11,6 +11,7 @@ services:
       MYSQL_COLLATION: utf8mb4_unicode_ci
     volumes:
       - ./volumes/mysql/data:/var/lib/mysql
+      - ./init-sql:/docker-entrypoint-initdb.d
     restart: always
 
   redis:
@@ -32,3 +33,16 @@ services:
       - ./volumes/nginx/html:/usr/share/nginx/html
       - ./volumes/nginx/logs:/var/log/nginx
     restart: always
+
+  nacos:
+    image: nacos/nacos-server:v2.4.3
+    container_name: nacos_container
+    environment:
+      - MODE=standalone
+      - JVM_XMS=256m
+      - JVM_XMX=256m
+      - NACOS_AUTH_ENABLE=false
+    ports:
+      - "8964:8848"
+      - "9964:9848"
+      - "9965:9849"

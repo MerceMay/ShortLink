@@ -49,7 +49,7 @@ public class UserController {
      *
      * @return true存在，false不存在
      */
-    @GetMapping("/api/short-link/admin/v1/has-username")
+    @GetMapping("/api/short-link/admin/v1/user/has-username")
     public Result<Boolean> hasUsername(@RequestParam("username") String username) {
         return Results.success(userService.hasUserName(username));
     }
