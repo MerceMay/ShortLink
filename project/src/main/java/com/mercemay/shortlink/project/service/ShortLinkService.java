@@ -31,6 +31,14 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
     ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam);
 
     /**
+     * 通过分布式锁创建短链接
+     *
+     * @param requestParam 创建参数
+     * @return 短链接返回结果
+     */
+    ShortLinkCreateRespDTO createShortLinkByLock(ShortLinkCreateReqDTO requestParam);
+
+    /**
      * 批量创建短链接
      *
      * @param requestParam 请求参数

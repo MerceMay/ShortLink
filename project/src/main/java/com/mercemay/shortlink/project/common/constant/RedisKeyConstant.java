@@ -53,4 +53,9 @@ public class RedisKeyConstant {
      * 短链接统计消费组 Key
      */
     public static final String SHORT_LINK_STATS_STREAM_CONSUMER_GROUP_KEY = "shortlink:stream:stats:group";
+
+    /**
+     * 使用分布式锁创建短链接 Key 前缀
+     */
+    public static final String SHORT_LINK_CREATE_BY_DISTRIBUTED_LOCK_KEY = "shortlink:lock:create:";
 }

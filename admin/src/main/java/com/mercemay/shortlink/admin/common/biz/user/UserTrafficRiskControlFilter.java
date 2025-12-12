@@ -36,7 +36,7 @@ public class UserTrafficRiskControlFilter implements Filter {
         redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource(USER_TRAFFIC_RISK_CONTROL_LUA_SCRIPT_PATH)));
         redisScript.setResultType(Long.class);
         String username = Optional.ofNullable(UserContext.getUserName()).orElse("anonymous");
-        Long result = null;
+        Long result;
         try {
             result = stringRedisTemplate.execute(
                     redisScript,
@@ -46,9 +46,11 @@ public class UserTrafficRiskControlFilter implements Filter {
         } catch (Throwable ex) {
             log.error("用户流量风控，执行Lua脚本异常，用户名：{}", username, ex);
             returnJson((HttpServletResponse) servletResponse, JSON.toJSONString(Results.failure(new ClientException(BaseErrorCode.TRAFFIC_CONTROL_ERROR))));
+            return;
         }
         if (result == null || result > userTrafficRiskControlConfiguration.getMaxRequests()) {
             returnJson((HttpServletResponse) servletResponse, JSON.toJSONString(Results.failure(new ClientException(BaseErrorCode.TRAFFIC_CONTROL_ERROR))));
+            return;
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
