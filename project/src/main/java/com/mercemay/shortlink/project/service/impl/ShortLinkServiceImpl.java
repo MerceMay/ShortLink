@@ -119,6 +119,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             baseMapper.insert(shortLinkDO);
             shortLinkRouteMapper.insert(shortLinkRouteDO);
         } catch (DuplicateKeyException e) {
+            if (!shortUriCreateCachePenetrationBloomFilter.contains(fullShortUrl)) {
+                shortUriCreateCachePenetrationBloomFilter.add(fullShortUrl);
+            }
             throw new ServiceException("短链接已存在，请重试生成");
         }
         stringRedisTemplate.opsForValue().set(
