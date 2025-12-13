@@ -27,12 +27,12 @@ public class RecycleBinController {
     /**
      * 保存回收站信息
      *
-     * @param recycleBinSaveReqDTO 回收站保存请求DTO
+     * @param requestParam 回收站保存请求DTO
      * @return 结果
      */
     @PostMapping("/api/short-link/v1/recycle-bin/save")
-    public Result<Void> saveRecycleBin(@RequestBody RecycleBinSaveReqDTO recycleBinSaveReqDTO) {
-        recycleBinService.saveRecycleBin(recycleBinSaveReqDTO);
+    public Result<Void> saveRecycleBin(@RequestBody RecycleBinSaveReqDTO requestParam) {
+        recycleBinService.saveRecycleBin(requestParam);
         return Results.success();
     }
 

@@ -5,9 +5,7 @@ spring:
   application:
     name: short-link-admin
   datasource:
-    # ShardingSphere 实现分库分表配置
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
-    # shardingSphere 配置文件路径
     url: jdbc:shardingsphere:classpath:shardingsphere-config-${database.env:dev}.yml
   data:
     redis:

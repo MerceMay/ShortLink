@@ -43,7 +43,7 @@ public class MessageQueueIdempotentHandler {
      *
      * @param messageId 消息ID
      */
-    public void markMessageAsAccomplish(String messageId) {
+    public void setAccomplish(String messageId) {
         String key = RedisKeyConstant.MESSAGE_QUEUE_IDEMPOTENT_KEY + messageId;
         stringRedisTemplate.opsForValue().set(key, "1", 2, TimeUnit.MINUTES);
     }

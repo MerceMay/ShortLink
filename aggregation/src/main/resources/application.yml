@@ -38,7 +38,7 @@ short-link:
   route:
     whitelist:
       enabled: true
-      name: '??,????'
+      name: '知乎,哔哩哔哩'
       details:
         - zhihu.com
         - bilibili.com

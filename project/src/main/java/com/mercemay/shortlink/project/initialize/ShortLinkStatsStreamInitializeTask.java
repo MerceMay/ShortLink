@@ -17,7 +17,7 @@ public class ShortLinkStatsStreamInitializeTask implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Boolean keyExists = stringRedisTemplate.hasKey(RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY);
-        if (!keyExists) {
+        if (keyExists == null || !keyExists) {
             stringRedisTemplate.opsForStream().createGroup(RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY, RedisKeyConstant.SHORT_LINK_STATS_STREAM_CONSUMER_GROUP_KEY);
         }
     }

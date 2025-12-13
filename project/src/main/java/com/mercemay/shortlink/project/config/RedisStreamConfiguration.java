@@ -54,11 +54,8 @@ public class RedisStreamConfiguration {
                         .build();
         StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer =
                 StreamMessageListenerContainer.create(redisConnectionFactory, options);
-        String topic = RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY;
-        String group = RedisKeyConstant.SHORT_LINK_STATS_STREAM_CONSUMER_GROUP_KEY;
-        streamMessageListenerContainer.receiveAutoAck(Consumer.from(group, "stats_consumer"),
-                StreamOffset.create(topic, ReadOffset.lastConsumed()),
-                shortLinkStatsSaveConsumer);
+        streamMessageListenerContainer.receiveAutoAck(Consumer.from(RedisKeyConstant.SHORT_LINK_STATS_STREAM_CONSUMER_GROUP_KEY, "stats_consumer"),
+                StreamOffset.create(RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY, ReadOffset.lastConsumed()), shortLinkStatsSaveConsumer);
         return streamMessageListenerContainer;
     }
 }

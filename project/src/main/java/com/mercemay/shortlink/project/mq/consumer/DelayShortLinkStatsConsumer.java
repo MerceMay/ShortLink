@@ -55,7 +55,7 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
                                     messageQueueIdempotentHandler.delMessageIdempotentKey(statsRecordDTO.getKeys()); // 异常处理，删除幂等标识
                                     log.error(ex.getMessage(), ex);
                                 }
-                                messageQueueIdempotentHandler.markMessageAsAccomplish(statsRecordDTO.getKeys()); // 标记消息已完成
+                                messageQueueIdempotentHandler.setAccomplish(statsRecordDTO.getKeys()); // 标记消息已完成
                                 continue;
                             }
                             LockSupport.parkUntil(500); // 阻塞当前线程500毫秒，避免空轮询

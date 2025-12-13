@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.mercemay.shortlink.admin.common.convention.errorcode.BaseErrorCode;
 import com.mercemay.shortlink.admin.common.convention.exception.ClientException;
 import com.mercemay.shortlink.admin.common.convention.result.Results;
-import com.mercemay.shortlink.admin.controller.UserTrafficRiskControlConfiguration;
+import com.mercemay.shortlink.admin.config.UserTrafficRiskControlConfiguration;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +41,9 @@ public class UserTrafficRiskControlFilter implements Filter {
             result = stringRedisTemplate.execute(
                     redisScript,
                     Lists.newArrayList(username),
-                    userTrafficRiskControlConfiguration.getTimeWindow()
-            );
+                    userTrafficRiskControlConfiguration.getTimeWindow());
         } catch (Throwable ex) {
-            log.error("用户流量风控，执行Lua脚本异常，用户名：{}", username, ex);
+            log.error("执行用户流量风控Lua脚本异常", ex);
             returnJson((HttpServletResponse) servletResponse, JSON.toJSONString(Results.failure(new ClientException(BaseErrorCode.TRAFFIC_CONTROL_ERROR))));
             return;
         }

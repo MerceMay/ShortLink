@@ -410,9 +410,6 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         List<String> userAccessLogsList = resultPage.getRecords().stream() // 获取当前页的所有用户列表
                 .map(ShortLinkStatsAccessRecordRespDTO::getUser)
                 .toList();
-        if (CollUtil.isEmpty(userAccessLogsList)) {
-            return resultPage; // 如果没有用户则直接返回结果
-        }
         List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectUvTypeByUsers(
                 requestParam.getGid(),
                 requestParam.getFullShortUrl(),
@@ -443,9 +440,6 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         List<String> userAccessLogsList = resultPage.getRecords().stream()
                 .map(ShortLinkStatsAccessRecordRespDTO::getUser)
                 .toList();
-        if (CollUtil.isEmpty(userAccessLogsList)) {
-            return resultPage;
-        }
         List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectGroupUvTypeByUsers(
                 requestParam.getGid(),
                 requestParam.getStartDate(),

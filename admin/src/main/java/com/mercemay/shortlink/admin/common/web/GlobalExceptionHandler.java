@@ -75,9 +75,9 @@ public class GlobalExceptionHandler {
     }
 
     private String getUrl(HttpServletRequest request) {
-        if (!StringUtils.hasLength(request.getQueryString())) { // 如果没有查询字符串
-            return request.getRequestURL().toString(); // 返回请求的URL
+        if (StringUtils.isEmpty(request.getQueryString())) {
+            return request.getRequestURL().toString();
         }
-        return request.getRequestURL().toString() + "?" + request.getQueryString(); // 返回完整的URL
+        return request.getRequestURL().toString() + "?" + request.getQueryString();
     }
 }

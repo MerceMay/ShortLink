@@ -32,7 +32,7 @@ public class ShortLinkUpdateReqDTO {
     private String gid;
 
     /**
-     * 有效期类型 0：永久有效 1：用户自定义
+     * 有效期类型 0：永久有效 1：自定义
      */
     private Integer validDateType;
 

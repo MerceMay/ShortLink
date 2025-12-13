@@ -18,7 +18,6 @@ public class ShortLinkStatsSaveProducer {
      * @param produceMap 消息内容
      */
     public void send(Map<String, String> produceMap) {
-        String topic = RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY;
-        stringRedisTemplate.opsForStream().add(topic, produceMap);
+        stringRedisTemplate.opsForStream().add(RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY, produceMap);
     }
 }

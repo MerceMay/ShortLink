@@ -30,7 +30,7 @@ public interface ShortLinkRemoteService {
      * @return 结果
      */
     @PostMapping("/api/short-link/v1/create")
-    Result<ShortLinkCreateRespDTO> createShortLink(ShortLinkCreateReqDTO requestParam);
+    Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam);
 
     /**
      * 批量创建短链接
@@ -39,7 +39,7 @@ public interface ShortLinkRemoteService {
      * @return 结果
      */
     @PostMapping("/api/short-link/v1/create/batch")
-    Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam);
+    Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam);
 
     /**
      * 更新短链接
@@ -47,7 +47,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam 请求参数
      */
     @PostMapping("/api/short-link/v1/update")
-    void updateShortLink(ShortLinkUpdateReqDTO requestParam);
+    void updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam);
 
     /**
      * 分页查询短链接
@@ -110,7 +110,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam 恢复请求参数
      */
     @PostMapping("/api/short-link/v1/recycle-bin/recover")
-    void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam);
+    void recoverRecycleBin(@RequestBody RecycleBinRecoverReqDTO requestParam);
 
     /**
      * 删除回收站短链接
@@ -118,7 +118,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam 删除请求参数
      */
     @PostMapping("/api/short-link/v1/recycle-bin/remove")
-    void removeRecycleBin(RecycleBinRemoveReqDTO requestParam);
+    void removeRecycleBin(@RequestBody RecycleBinRemoveReqDTO requestParam);
 
     /**
      * 获取单个短链接监控数据

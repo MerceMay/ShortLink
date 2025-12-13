@@ -122,7 +122,7 @@ public class LinkUtil {
      */
     public static String getNetwork(HttpServletRequest request) {
         String actualIp = getActualIp(request);
-        return actualIp.startsWith("192.168.") || actualIp.startsWith("10.") || actualIp.startsWith("172.") ? "WIFI" : "Mobile";
+        return actualIp.startsWith("192.168.") || actualIp.startsWith("10.") ? "WIFI" : "Mobile";
     }
 
     /**

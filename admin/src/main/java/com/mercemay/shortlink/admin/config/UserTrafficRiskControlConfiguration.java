@@ -1,4 +1,4 @@
-package com.mercemay.shortlink.admin.controller;
+package com.mercemay.shortlink.admin.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

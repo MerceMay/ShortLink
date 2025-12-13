@@ -1,5 +1,6 @@
 package com.mercemay.shortlink.admin.common.convention.exception;
 
+import com.mercemay.shortlink.admin.common.convention.errorcode.BaseErrorCode;
 import com.mercemay.shortlink.admin.common.convention.errorcode.IErrorCode;
 
 public class ClientException extends AbstractException {
@@ -8,7 +9,7 @@ public class ClientException extends AbstractException {
     }
 
     public ClientException(String message) {
-        this(message, null, null);
+        this(message, null, BaseErrorCode.CLIENT_ERROR);
     }
 
     public ClientException(String message, IErrorCode errorCode) {

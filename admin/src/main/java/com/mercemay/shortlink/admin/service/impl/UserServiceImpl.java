@@ -91,11 +91,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public void updateByUsername(UserUpdateReqDTO requestParam) {
         if (!Objects.equals(requestParam.getUsername(), UserContext.getUserName())) {
-            throw new ClientException(UserErrorCodeEnum.USER_UNAUTHORIZED_ACCESS);
+            throw new ClientException("当前登录用户修改请求异常");
         }
-        LambdaUpdateWrapper<UserDO> updateWrapper =
-                Wrappers.lambdaUpdate(UserDO.class)
-                        .eq(UserDO::getUsername, requestParam.getUsername());
+        LambdaUpdateWrapper<UserDO> updateWrapper = Wrappers.lambdaUpdate(UserDO.class)
+                .eq(UserDO::getUsername, requestParam.getUsername());
         baseMapper.update(BeanUtil.toBean(requestParam, UserDO.class), updateWrapper);
     }
 
@@ -107,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 .eq(UserDO::getDelFlag, 0);
         UserDO userDO = baseMapper.selectOne(queryWrapper);
         if (userDO == null) {
-            throw new ClientException(UserErrorCodeEnum.USER_NOT_EXIST);
+            throw new ClientException("用户不存在");
         }
         Map<Object, Object> hasLoginMap = stringRedisTemplate.opsForHash().entries(RedisCacheConstant.USER_LOGIN_KEY + requestParam.getUsername());
         if (CollUtil.isNotEmpty(hasLoginMap)) {
@@ -135,6 +134,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             stringRedisTemplate.delete(RedisCacheConstant.USER_LOGIN_KEY + username);
             return;
         }
-        throw new ClientException(UserErrorCodeEnum.USER_NOT_LOGIN);
+        throw new ClientException("用户Token不存在或用户未登录");
     }
 }

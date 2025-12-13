@@ -51,7 +51,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
         IPage<ShortLinkDO> resultPage = baseMapper.selectPage(requestParam, queryWrapper);
         return resultPage.convert(each -> {
             ShortLinkPageRespDTO result = BeanUtil.toBean(each, ShortLinkPageRespDTO.class);
-            result.setFullShortUrl("http://" + each.getFullShortUrl());
+            result.setDomain("http://" + result.getDomain());
             return result;
         });
     }

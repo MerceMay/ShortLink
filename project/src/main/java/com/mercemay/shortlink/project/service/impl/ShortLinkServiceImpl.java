@@ -225,14 +225,14 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         IPage<ShortLinkDO> resultPage = baseMapper.pageShortLink(requestParam);
         return resultPage.convert(each -> {
             ShortLinkPageRespDTO result = BeanUtil.toBean(each, ShortLinkPageRespDTO.class);
-            result.setFullShortUrl(each.getFullShortUrl());
+            result.setDomain("http://" + result.getFullShortUrl());
             return result;
         });
     }
 
     @Override
     public List<ShortLinkGroupCountQueryRespDTO> listShortLinkGroupCount(List<String> requestParam) {
-        QueryWrapper<ShortLinkDO> queryWrapper = Wrappers.<ShortLinkDO>query()
+        QueryWrapper<ShortLinkDO> queryWrapper = Wrappers.query(new ShortLinkDO())
                 .select("gid, count(*) as shortLinkCount")
                 .in("gid", requestParam)
                 .eq("enable_status", 0)
@@ -419,22 +419,24 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .orElse("");
         String fullShortUrl = serverName + serverPort + "/" + shortUri;
         String originLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.SHORT_LINK_ROUTE_KEY + fullShortUrl);
-        if (StrUtil.isNotBlank(originLink)) {
+        if (StrUtil.isNotBlank(originLink)) { // 缓存存在，直接返回
             ShortLinkStatsRecordDTO shortLinkStatsRecordDTO = buildLinkStatsRecordAndSetUser(fullShortUrl, request, response); // 构建统计记录并设置用户信息
             shortLinkStats(fullShortUrl, null, shortLinkStatsRecordDTO); // 统计短链接访问数据
             ((HttpServletResponse) response).sendRedirect(originLink);
             return;
         }
         boolean contains = shortUriCreateCachePenetrationBloomFilter.contains(fullShortUrl); // 布隆过滤器判断是否存在该短链接
-        if (!contains) {
+        if (!contains) { // 布隆过滤器不存在该短链接，直接返回未找到
             ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
         }
+        // 布隆过滤器存在，有两种可能，缓存击穿或短链接真实存在，继续往下走
         String nullShortLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.SHORT_LINK_NULL_ROUTE_KEY + fullShortUrl); // 如果有空值缓存，直接返回未找到
         if (StrUtil.isNotBlank(nullShortLink)) {
             ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
         }
+        // 没有空值缓存，可能是缓存击穿，使用分布式锁加载缓存
         RLock lock = redissonClient.getLock(RedisKeyConstant.SHORT_LINK_ROUTE_LOCK + fullShortUrl);
         lock.lock();
         try {
@@ -482,7 +484,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         Map<String, String> produceMessage = new HashMap<>();
         produceMessage.put("fullShortUrl", fullShortUrl);
         produceMessage.put("gid", gid);
-        produceMessage.put("shortLinkStatsRecord", JSON.toJSONString(shortLinkStatsRecord));
+        produceMessage.put("statsRecord", JSON.toJSONString(shortLinkStatsRecord));
         shortLinkStatsSaveProducer.send(produceMessage);
     }
 
@@ -604,7 +606,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
         List<String> details = routeDomainWhiteListConfiguration.getDetails();
         if (!details.contains(domain)) {
-            throw new ClientException("跳转链接域名不在白名单内，请更换后重新填写");
+            throw new ClientException("跳转链接只能不能跳转到白名单内，请生成以下网站跳转链接：" + routeDomainWhiteListConfiguration.getNames());
         }
     }
 }

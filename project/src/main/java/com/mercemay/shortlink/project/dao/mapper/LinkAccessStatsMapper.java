@@ -21,7 +21,7 @@ public interface LinkAccessStatsMapper extends BaseMapper<LinkAccessStatsDO> {
             "VALUES( #{linkAccessStats.fullShortUrl}, #{linkAccessStats.gid}, #{linkAccessStats.date}, #{linkAccessStats.pv}, #{linkAccessStats.uv}, #{linkAccessStats.uip}, #{linkAccessStats.hour}, #{linkAccessStats.weekday}, NOW(), NOW(), 0) ON DUPLICATE KEY UPDATE pv = pv +  #{linkAccessStats.pv}, " +
             "uv = uv + #{linkAccessStats.uv}, " +
             " uip = uip + #{linkAccessStats.uip};")
-    void shortLinkStats(@Param("linkAccessStats") LinkAccessStatsDO linkAccessStats);
+    void shortLinkStats(@Param("linkAccessStats") LinkAccessStatsDO linkAccessStatsDO);
 
     /**
      * 根据短链接获取指定日期内基础监控数据

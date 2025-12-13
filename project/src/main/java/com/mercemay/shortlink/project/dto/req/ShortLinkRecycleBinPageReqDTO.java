@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class ShortLinkRecycleBinPageReqDTO extends Page<ShortLinkDO> {
     /**
-     * 分组标识列表
+     * 分组标识
      */
     private List<String> gidList;
 }

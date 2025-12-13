@@ -2,7 +2,6 @@ package com.mercemay.shortlink.admin.config;
 
 import com.mercemay.shortlink.admin.common.biz.user.UserTrafficRiskControlFilter;
 import com.mercemay.shortlink.admin.common.biz.user.UserTransmitFilter;
-import com.mercemay.shortlink.admin.controller.UserTrafficRiskControlConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +35,7 @@ public class UserConfiguration {
      * @return 过滤器注册Bean
      */
     @Bean
-    @ConditionalOnProperty(name = "shortlink.user-traffic-control.enabled", havingValue = "true")
+    @ConditionalOnProperty(name = "short-link.user-traffic-control.enabled", havingValue = "true")
     public FilterRegistrationBean<UserTrafficRiskControlFilter> globalUserTrafficRiskControlFilter(
             StringRedisTemplate stringRedisTemplate,
             UserTrafficRiskControlConfiguration userTrafficRiskControlConfiguration) {

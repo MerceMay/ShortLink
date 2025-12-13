@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/data_source_mapping.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/biz/user/UserTrafficRiskControlFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/biz/user/UserTrafficRiskControlFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/convention/errorcode/BaseErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/convention/errorcode/BaseErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/convention/exception/ClientException.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/convention/exception/ClientException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/enums/UserErrorCodeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/enums/UserErrorCodeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/web/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/web/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/RBloomFilterConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/RBloomFilterConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/UserConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/UserConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/controller/UserTrafficRiskControlConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/UserTrafficRiskControlConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/resp/ShortLinkStatsAccessDailyRespDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/resp/ShortLinkStatsAccessDailyRespDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/convention/errorcode/BaseErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/convention/errorcode/BaseErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/convention/exception/ClientException.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/convention/exception/ClientException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/web/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/web/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/config/RedisStreamConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/config/RedisStreamConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/controller/RecycleBinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/controller/RecycleBinController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/ShortLinkDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/ShortLinkDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkAccessStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkAccessStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkCreateReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkCreateReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkRecycleBinPageReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkRecycleBinPageReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkUpdateReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkUpdateReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/handler/CustomBlockHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/handler/CustomBlockHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/initialize/ShortLinkStatsStreamInitializeTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/initialize/ShortLinkStatsStreamInitializeTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/producer/DelayShortLinkStatsProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/producer/DelayShortLinkStatsProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/producer/ShortLinkStatsSaveProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/producer/ShortLinkStatsSaveProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/RecycleBinServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/RecycleBinServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/util/LinkUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/util/LinkUtil.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "MerceMay"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MerceMay/ShortLink.git",
+    "accountId": "7178ede9-bb1f-4459-8833-2d42df439463"
+  }
+}]]></component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="36mcrjiZ600FLYjYLLJrFs4nRZx" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.shortlink [clean].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found": "发现新的/更新的数据库配置",
+    "Notification.DoNotAsk-DatabaseConfigFileWatcher.found": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.AggregationApplication.executor": "Run",
+    "Spring Boot.GatewayServiceApplication.executor": "Run",
+    "Spring Boot.ShortLinkAdminApplication.executor": "Run",
+    "Spring Boot.ShortLinkApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "F:/Documents/Code/Java/shortlilnk",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.language.and.region",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+    <option name="configurationStatuses">
+      <map>
+        <entry key="SpringBootApplicationConfigurationType">
+          <value>
+            <map>
+              <entry key="AggregationApplication" value="STOPPED" />
+              <entry key="GatewayServiceApplication" value="STOPPED" />
+              <entry key="ShortLinkAdminApplication" value="STOPPED" />
+              <entry key="ShortLinkApplication" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.ShortLinkAdminApplication">
+    <configuration name="AggregationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="shortlink-aggregation" />
+      <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mercemay.shortlink.aggregation.AggregationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="shortlink-gateway" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mercemay.shortlink.gateway.GatewayServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ShortLinkAdminApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="shortlink-admin" />
+      <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mercemay.shortlink.admin.ShortLinkAdminApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mercemay.shortlink.admin.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ShortLinkApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="shortlink-project" />
+      <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mercemay.shortlink.project.ShortLinkApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mercemay.shortlink.project.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.ShortLinkApplication" />
+        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="" />
+      <created>1765615387743</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1765615387743</updated>
+      <workItem from="1765615389026" duration="10620000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>

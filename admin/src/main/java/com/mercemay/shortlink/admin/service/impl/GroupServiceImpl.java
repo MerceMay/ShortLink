@@ -26,11 +26,9 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 短链接分组接口实现层
@@ -86,33 +84,16 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .orderByDesc(GroupDO::getSortOrder)
                 .orderByDesc(GroupDO::getUpdateTime);
         List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
-        // 如果分组列表为空，直接返回空列表
-        if (CollUtil.isEmpty(groupDOList)) {
-            return Collections.emptyList();
-        }
-        // 转换对象
-        List<ShortLinkGroupRespDTO> result = BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
-
-        // 调用远程服务查询每个分组的短链接数量
-        try {
-            List<String> gidList = groupDOList.stream().map(GroupDO::getGid).toList(); // 提取gid列表
-            Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService.listShortLinkGroupCount(gidList); // 远程调用
-            if (listResult != null && CollUtil.isNotEmpty(listResult.getData())) { // 结果不为空，进行数量设置
-                Map<String, Integer> countMap = listResult.getData().stream() // 转换为Map
-                        .collect(Collectors.toMap(
-                                ShortLinkGroupCountQueryRespDTO::getGid, // key: gid
-                                ShortLinkGroupCountQueryRespDTO::getShortLinkCount, // value: 短链接数量
-                                (oldValue, newValue) -> newValue // 如果有重复key，保留新值
-                        ));
-                result.forEach(each -> { // 设置每个分组的短链接数量
-                    Integer count = countMap.get(each.getGid()); // 获取对应gid的数量
-                    each.setShortLinkCount(count != null ? count : 0); // 设置数量，若为空则设置为0
-                });
-            }
-        } catch (Exception e) {
-            log.error("调用远程服务查询短链接分组数量异常", e);
-        }
-        return result;
+        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService
+                .listShortLinkGroupCount(groupDOList.stream().map(GroupDO::getGid).toList());
+        List<ShortLinkGroupRespDTO> shortLinkGroupRespDTOList = BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
+        shortLinkGroupRespDTOList.forEach(each -> {
+            Optional<ShortLinkGroupCountQueryRespDTO> first = listResult.getData().stream()
+                    .filter(item -> Objects.equals(item.getGid(), each.getGid()))
+                    .findFirst();
+            first.ifPresent(item -> each.setShortLinkCount(first.get().getShortLinkCount()));
+        });
+        return shortLinkGroupRespDTOList;
     }
 
     @Override
