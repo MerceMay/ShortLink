@@ -4,15 +4,44 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程">
+    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="新增数据源映射和SQL方言配置，更新.gitignore以排除IDEA文件">
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/sql/schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/test/java/com/mercemay/shortlink/admin/GroupTableShardingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/test/java/com/mercemay/shortlink/admin/UserTableShardingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/sql/schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/test/java/com/mercemay/shortlink/project/LinkStatsTodayTableShardingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/test/java/com/mercemay/shortlink/project/LinkTableShardingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/test/java/com/mercemay/shortlink/project/RouteTableShardingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/controller/ShortLinkStatsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/controller/ShortLinkStatsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/req/ShortLinkStatsAccessRecordReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/req/ShortLinkStatsAccessRecordReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/req/ShortLinkStatsReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/req/ShortLinkStatsReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/resp/ShortLinkPageRespDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/dto/resp/ShortLinkPageRespDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkAccessLogsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkAccessLogsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkAccessStatsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkAccessStatsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkBrowserStatsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkBrowserStatsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkDeviceStatsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkDeviceStatsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkLocaleStatsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkLocaleStatsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkNetworkStatsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkNetworkStatsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkOsStatsDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkOsStatsDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkStatsTodayDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/LinkStatsTodayDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkAccessStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkAccessStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkBrowserStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkBrowserStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkDeviceStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkDeviceStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkLocaleStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkLocaleStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkNetworkStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkNetworkStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkOsStatsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkOsStatsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkStatsTodayMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkStatsTodayMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/ShortLinkMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/ShortLinkMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkStatsAccessRecordReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkStatsAccessRecordReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkStatsReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/req/ShortLinkStatsReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/resp/ShortLinkPageRespDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/resp/ShortLinkPageRespDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/RecycleBinServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/RecycleBinServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/mapper/LinkMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/mapper/LinkMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +92,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.AggregationApplication.executor": "Run",
     "Spring Boot.GatewayServiceApplication.executor": "Run",
     "Spring Boot.ShortLinkAdminApplication.executor": "Run",
@@ -208,7 +238,7 @@
       <workItem from="1765615389026" duration="10720000" />
       <workItem from="1765626156743" duration="2369000" />
       <workItem from="1765628553471" duration="1060000" />
-      <workItem from="1765692367397" duration="7328000" />
+      <workItem from="1765692367397" duration="11431000" />
     </task>
     <task id="LOCAL-00001" summary="修改错误">
       <option name="closed" value="true" />
@@ -226,7 +256,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765698534855</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="新增数据源映射和SQL方言配置，更新.gitignore以排除IDEA文件">
+      <option name="closed" value="true" />
+      <created>1765700012969</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1765700012969</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -246,7 +284,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="修改错误" />
     <MESSAGE value="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程" />
+    <MESSAGE value="新增数据源映射和SQL方言配置，更新.gitignore以排除IDEA文件" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增数据源映射和SQL方言配置，更新.gitignore以排除IDEA文件" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

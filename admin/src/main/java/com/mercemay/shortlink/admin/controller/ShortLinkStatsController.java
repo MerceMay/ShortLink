@@ -5,6 +5,7 @@ import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.remote.ShortLinkRemoteService;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkGroupStatsReqDTO;
+import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.req.ShortLinkStatsReqDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import com.mercemay.shortlink.admin.remote.dto.resp.ShortLinkStatsRespDTO;
@@ -28,8 +29,10 @@ public class ShortLinkStatsController {
      */
     @GetMapping("/api/short-link/admin/v1/stats")
     public Result<ShortLinkStatsRespDTO> getShortLinkStats(ShortLinkStatsReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkStats(requestParam.getFullShortUrl(),
+        return shortLinkRemoteService.getShortLinkStats(
+                requestParam.getFullShortUrl(),
                 requestParam.getGid(),
+                requestParam.getEnableStatus(),
                 requestParam.getStartDate(),
                 requestParam.getEndDate());
     }
@@ -42,7 +45,8 @@ public class ShortLinkStatsController {
      */
     @GetMapping("/api/short-link/admin/v1/stats/group")
     public Result<ShortLinkStatsRespDTO> getShortLinkGroupStats(ShortLinkGroupStatsReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkGroupStats(requestParam.getGid(),
+        return shortLinkRemoteService.getShortLinkGroupStats(
+                requestParam.getGid(),
                 requestParam.getStartDate(),
                 requestParam.getEndDate());
     }
@@ -54,11 +58,15 @@ public class ShortLinkStatsController {
      * @return 短链接访问记录监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats/access-record")
-    public Result<Page<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkAccessRecordStats(requestParam.getFullShortUrl(),
+    public Result<Page<ShortLinkStatsAccessRecordRespDTO>> getShortLinkAccessRecordStats(ShortLinkStatsAccessRecordReqDTO requestParam) {
+        return shortLinkRemoteService.getShortLinkAccessRecordStats(
+                requestParam.getFullShortUrl(),
                 requestParam.getGid(),
                 requestParam.getStartDate(),
-                requestParam.getEndDate());
+                requestParam.getEndDate(),
+                requestParam.getEnableStatus(),
+                requestParam.getCurrent(),
+                requestParam.getSize());
     }
 
     /**
@@ -69,8 +77,11 @@ public class ShortLinkStatsController {
      */
     @GetMapping("/api/short-link/admin/v1/stats/access-record/group")
     public Result<Page<ShortLinkStatsAccessRecordRespDTO>> getShortLinkGroupAccessRecordStats(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
-        return shortLinkRemoteService.getShortLinkGroupAccessRecordStats(requestParam.getGid(),
+        return shortLinkRemoteService.getShortLinkGroupAccessRecordStats(
+                requestParam.getGid(),
                 requestParam.getStartDate(),
-                requestParam.getEndDate());
+                requestParam.getEndDate(),
+                requestParam.getCurrent(),
+                requestParam.getSize());
     }
 }
