@@ -23,4 +23,17 @@ public class RBloomFilterConfiguration {
         cachePenetrationBloomFilter.tryInit(100000000L, 0.001);
         return cachePenetrationBloomFilter;
     }
+
+    /**
+     * 防止分组标识注册查询数据库布隆过滤器
+     *
+     * @param redissonClient Redisson客户端
+     * @return 布隆过滤器
+     */
+    @Bean
+    public RBloomFilter<String> gidRegisterCachePenetrationBloomFilter(RedissonClient redissonClient) {
+        RBloomFilter<String> cachePenetrationBloomFilter = redissonClient.getBloomFilter("gidRegisterCachePenetrationBloomFilter");
+        cachePenetrationBloomFilter.tryInit(200000000L, 0.001);
+        return cachePenetrationBloomFilter;
+    }
 }

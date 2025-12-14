@@ -2,6 +2,7 @@ package com.mercemay.shortlink.admin.remote;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
+import com.mercemay.shortlink.admin.config.OpenFeignConfiguration;
 import com.mercemay.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
 import com.mercemay.shortlink.admin.dto.req.RecycleBinRemoveReqDTO;
 import com.mercemay.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
@@ -20,7 +21,9 @@ import java.util.List;
 /**
  * 短链实际远程服务接口
  */
-@FeignClient(value = "short-link-project", url = "${aggregation.remote-url:}")
+@FeignClient(value = "short-link-project",
+        url = "${aggregation.remote-url:}",
+        configuration = OpenFeignConfiguration.class)
 public interface ShortLinkRemoteService {
 
     /**

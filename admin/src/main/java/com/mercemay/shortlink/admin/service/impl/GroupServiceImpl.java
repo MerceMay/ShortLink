@@ -2,6 +2,7 @@ package com.mercemay.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -9,9 +10,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mercemay.shortlink.admin.common.biz.user.UserContext;
 import com.mercemay.shortlink.admin.common.constant.RedisCacheConstant;
 import com.mercemay.shortlink.admin.common.convention.exception.ClientException;
+import com.mercemay.shortlink.admin.common.convention.exception.ServiceException;
 import com.mercemay.shortlink.admin.common.convention.result.Result;
 import com.mercemay.shortlink.admin.dao.entity.GroupDO;
+import com.mercemay.shortlink.admin.dao.entity.GroupUniqueDO;
 import com.mercemay.shortlink.admin.dao.mapper.GroupMapper;
+import com.mercemay.shortlink.admin.dao.mapper.GroupUniqueMapper;
 import com.mercemay.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.mercemay.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.mercemay.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
@@ -21,9 +25,11 @@ import com.mercemay.shortlink.admin.service.GroupService;
 import com.mercemay.shortlink.admin.util.RandomGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +45,8 @@ import java.util.Optional;
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
     private final ShortLinkRemoteService shortLinkRemoteService;
     private final RedissonClient redissonClient;
+    private final RBloomFilter<String> gidRegisterCachePenetrationBloomFilter;
+    private final GroupUniqueMapper groupUniqueMapper;
 
     @Value("${short-link.group.max-num}")
     private Integer groupMaxNum;
@@ -60,17 +68,27 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
             if (CollUtil.isNotEmpty(groupDOList) && groupDOList.size() >= groupMaxNum) {
                 throw new ClientException("短链接分组数量已达上限，无法新增");
             }
-            String gid = RandomGenerator.generateRandom();
-            while (hadGid(username, gid)) { // 检查gid是否存在，如果存在则重新生成
-                gid = RandomGenerator.generateRandom();
+            int retryCount = 0;
+            int maxRetries = 10;
+            String gid = null;
+            while (retryCount < maxRetries) {
+                gid = saveGroupUniqueReturnGid();
+                if (StrUtil.isNotEmpty(gid)) {
+                    GroupDO groupDO = GroupDO.builder()
+                            .gid(gid)
+                            .name(groupName)
+                            .sortOrder(0)
+                            .username(username)
+                            .build();
+                    baseMapper.insert(groupDO);
+                    gidRegisterCachePenetrationBloomFilter.add(gid);
+                    break;
+                }
+                retryCount++;
             }
-            GroupDO groupDO = GroupDO.builder()
-                    .gid(gid)
-                    .name(groupName)
-                    .sortOrder(0)
-                    .username(username)
-                    .build();
-            baseMapper.insert(groupDO);
+            if (StrUtil.isEmpty(gid)) {
+                throw new ServiceException("创建短链接分组失败，请稍后重试");
+            }
         } finally {
             lock.unlock();
         }
@@ -132,11 +150,18 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         });
     }
 
-    private boolean hadGid(String username, String gid) {
-        LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
-                .eq(GroupDO::getGid, gid)
-                .eq(GroupDO::getUsername, Optional.ofNullable(username).orElse(UserContext.getUserName()));
-        GroupDO groupDO = baseMapper.selectOne(queryWrapper);
-        return groupDO != null; // 存在返回true
+    private String saveGroupUniqueReturnGid() {
+        String gid = RandomGenerator.generateRandom();
+        if (!gidRegisterCachePenetrationBloomFilter.contains(gid)) {
+            GroupUniqueDO groupUniqueDO = GroupUniqueDO.builder()
+                    .gid(gid)
+                    .build();
+            try {
+                groupUniqueMapper.insert(groupUniqueDO);
+            } catch (DuplicateKeyException e) {
+                return null;
+            }
+        }
+        return gid;
     }
 }

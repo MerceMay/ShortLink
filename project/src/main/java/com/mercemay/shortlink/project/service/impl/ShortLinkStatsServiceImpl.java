@@ -7,6 +7,9 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mercemay.shortlink.project.common.biz.user.UserContext;
+import com.mercemay.shortlink.project.common.convention.exception.ServiceException;
 import com.mercemay.shortlink.project.dao.entity.*;
 import com.mercemay.shortlink.project.dao.mapper.*;
 import com.mercemay.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
@@ -32,9 +35,11 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
+    private final LinkGroupMapper linkGroupMapper;
 
     @Override
     public ShortLinkStatsRespDTO getShortLinkStats(ShortLinkStatsReqDTO requestParam) {
+        checkGroupBelongToUser(requestParam.getGid());
         List<LinkAccessStatsDO> LinkAccessStatsDOList = linkAccessStatsMapper.listStatsByShortLink(requestParam);
         if (CollUtil.isEmpty(LinkAccessStatsDOList)) {
             return null;
@@ -236,6 +241,7 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
 
     @Override
     public ShortLinkStatsRespDTO getShortLinkGroupStats(ShortLinkGroupStatsReqDTO requestParam) {
+        checkGroupBelongToUser(requestParam.getGid());
         List<LinkAccessStatsDO> listStatsByGroup = linkAccessStatsMapper.listStatsByGroup(requestParam);
         if (CollUtil.isEmpty(listStatsByGroup)) {
             return null;
@@ -399,12 +405,16 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
 
     @Override
     public IPage<ShortLinkStatsAccessRecordRespDTO> getShortLinkAccessRecordStats(ShortLinkStatsAccessRecordReqDTO requestParam) {
+        checkGroupBelongToUser(requestParam.getGid());
         LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
                 .eq(LinkAccessLogsDO::getFullShortUrl, requestParam.getFullShortUrl())
                 .between(LinkAccessLogsDO::getCreateTime, requestParam.getStartDate(), requestParam.getEndDate())
                 .eq(LinkAccessLogsDO::getDelFlag, 0)
                 .orderByDesc(LinkAccessLogsDO::getCreateTime); // 这个总体的查询条件为：根据gid、fullShortUrl、createTime范围和未删除标志进行过滤，并按创建时间降序排序
         IPage<LinkAccessLogsDO> pageResult = linkAccessLogsMapper.selectPage(requestParam, queryWrapper); // 分页查询
+        if (CollUtil.isEmpty(pageResult.getRecords())) {
+            return new Page<>();
+        }
         IPage<ShortLinkStatsAccessRecordRespDTO> resultPage = pageResult.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class)); // 把每个LinkAccessLogsDO转换为ShortLinkStatsAccessRecordRespDTO
         List<String> userAccessLogsList = resultPage.getRecords().stream() // 获取当前页的所有用户列表
                 .map(ShortLinkStatsAccessRecordRespDTO::getUser)
@@ -430,7 +440,11 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
 
     @Override
     public IPage<ShortLinkStatsAccessRecordRespDTO> getShortLinkGroupAccessRecordStats(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        checkGroupBelongToUser(requestParam.getGid());
         IPage<LinkAccessLogsDO> linkAccessLogsDOIPage = linkAccessLogsMapper.selectGroupPage(requestParam);
+        if (CollUtil.isEmpty(linkAccessLogsDOIPage.getRecords())) {
+            return new Page<>();
+        }
         IPage<ShortLinkStatsAccessRecordRespDTO> resultPage = linkAccessLogsDOIPage
                 .convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
         List<String> userAccessLogsList = resultPage.getRecords().stream()
@@ -451,5 +465,17 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                         .orElse("旧访客")
         ));
         return resultPage;
+    }
+
+    private void checkGroupBelongToUser(String gid) throws ServiceException {
+        String username = Optional.ofNullable(UserContext.getUserName())
+                .orElseThrow(() -> new ServiceException("用户未登录"));
+        LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
+                .eq(GroupDO::getGid, gid)
+                .eq(GroupDO::getUsername, username);
+        List<GroupDO> groupDOList = linkGroupMapper.selectList(queryWrapper);
+        if (CollUtil.isEmpty(groupDOList)) {
+            throw new ServiceException("分组不属于当前用户");
+        }
     }
 }

@@ -4,20 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="移除短链接统计表中的gid字段，采用连表查询">
+    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/OpenFeignConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/dao/entity/GroupUniqueDO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/dao/mapper/GroupUniqueMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/biz/user/UserContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/biz/user/UserInfoDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/biz/user/UserTransmitInterceptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/config/UserConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/GroupDO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkGroupMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/controller/ShortLinkStatsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/controller/ShortLinkStatsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/ShortLinkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/ShortLinkService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/RBloomFilterConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/RBloomFilterConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -70,13 +88,13 @@
     "Spring Boot.ShortLinkApplication.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "F:/Documents/Code/Java/shortlilnk",
+    "last_opened_file_path": "F:/Documents/Code/Java/shortlilnk/project/src/main/java/com/mercemay/shortlink/project/common/biz/user",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "模块",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "preferences.language.and.region",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -90,6 +108,9 @@
     <option name="notificationShown" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\Documents\Code\Java\shortlilnk\project\src\main\java\com\mercemay\shortlink\project\common\biz\user" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\Documents\Code\Java\shortlilnk\volumes\mysql" />
       <recent name="F:\Documents\Code\Java\shortlilnk\volumes" />
@@ -185,8 +206,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="Spring Boot.ShortLinkApplication" />
+        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="Docker.docker-compose.yml: Compose 部署" />
       </list>
     </recent_temporary>
@@ -209,7 +230,12 @@
       <workItem from="1765615389026" duration="10720000" />
       <workItem from="1765626156743" duration="2369000" />
       <workItem from="1765628553471" duration="1060000" />
-      <workItem from="1765692367397" duration="14451000" />
+      <workItem from="1765692367397" duration="14896000" />
+      <workItem from="1765707669835" duration="39000" />
+      <workItem from="1765707718220" duration="33000" />
+      <workItem from="1765707769823" duration="69000" />
+      <workItem from="1765707858334" duration="13000" />
+      <workItem from="1765708245199" duration="7002000" />
     </task>
     <task id="LOCAL-00001" summary="修改错误">
       <option name="closed" value="true" />
@@ -243,7 +269,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765704176696</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能">
+      <option name="closed" value="true" />
+      <created>1765707231607</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1765707231607</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -265,7 +299,8 @@
     <MESSAGE value="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程" />
     <MESSAGE value="新增数据源映射和SQL方言配置，更新.gitignore以排除IDEA文件" />
     <MESSAGE value="移除短链接统计表中的gid字段，采用连表查询" />
-    <option name="LAST_COMMIT_MESSAGE" value="移除短链接统计表中的gid字段，采用连表查询" />
+    <MESSAGE value="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -287,26 +322,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java</url>
-          <line>69</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java</url>
-          <line>73</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java</url>
-          <line>70</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java</url>
-          <line>74</line>
-          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
