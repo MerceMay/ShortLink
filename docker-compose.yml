@@ -11,7 +11,7 @@ services:
       MYSQL_COLLATION: utf8mb4_unicode_ci
     volumes:
       - ./volumes/mysql/data:/var/lib/mysql
-      - ./init-sql:/docker-entrypoint-initdb.d
+      - ./volumes/mysql/init:/docker-entrypoint-initdb.d
     restart: always
 
   redis:
@@ -46,4 +46,33 @@ services:
       - "8964:8848"
       - "9964:9848"
       - "9965:9849"
+    restart: always
+
+  rmqnamesrv:
+    image: apache/rocketmq:5.3.1
+    container_name: rmqnamesrv_container
+    command: sh mqnamesrv
+    ports:
+      - "9876:9876"
+    volumes:
+      - ./volumes/rocketmq/namesrv/logs:/home/rocketmq/logs
+      - ./volumes/rocketmq/namesrv/store:/home/rocketmq/store
+    restart: always
+
+  rmqbroker:
+    image: apache/rocketmq:5.3.1
+    container_name: rmqbroker_container
+    command: sh mqbroker -c /home/rocketmq/conf/broker.conf
+    ports:
+      - "10909:10909"
+      - "10911:10911"
+      - "10912:10912"
+    environment:
+      NAMESRV_ADDR: rmqnamesrv:9876
+    volumes:
+      - ./volumes/rocketmq/conf/broker.conf:/home/rocketmq/conf/broker.conf
+      - ./volumes/rocketmq/broker/logs:/home/rocketmq/logs
+      - ./volumes/rocketmq/broker/store:/home/rocketmq/store
+    depends_on:
+      - rmqnamesrv
     restart: always

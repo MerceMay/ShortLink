@@ -46,3 +46,9 @@ build/
 
 ### nginx logs ###
 /volumes/nginx/logs/
+
+### RocketMQ Volumes ###
+/volumes/rocketmq/namesrv/logs/
+/volumes/rocketmq/namesrv/store/
+/volumes/rocketmq/broker/logs/
+/volumes/rocketmq/broker/store/
