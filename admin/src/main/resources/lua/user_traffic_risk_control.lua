@@ -9,7 +9,9 @@ local redisKey = "shortlink:user:traffic:control:" .. username
 local currentCount = redis.call("INCR", redisKey)
 
 -- 设置键的过期时间
-redis.call("EXPIRE", redisKey, timeWindow)
+if currentCount == 1 then
+    redis.call("EXPIRE", redisKey, timeWindow)
+end
 
 -- 返回当前访问计数
 return currentCount

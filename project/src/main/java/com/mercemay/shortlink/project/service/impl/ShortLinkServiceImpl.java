@@ -310,8 +310,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 rLock.unlock();
             }
         }
-        if (!Objects.equals(existingShortLink.getValidDateType(), requestParam.getValidDateType()) // 如果有效期类型或有效期有变化，删除跳转缓存
-                || !Objects.equals(existingShortLink.getValidDate(), requestParam.getValidDate())) {
+        if (!Objects.equals(existingShortLink.getValidDateType(), requestParam.getValidDateType()) // 如果有效期类型、有效期或者跳转链接有变化，删除缓存
+                || !Objects.equals(existingShortLink.getValidDate(), requestParam.getValidDate())
+                || !Objects.equals(existingShortLink.getOriginUrl(), requestParam.getOriginUrl())) {
             stringRedisTemplate.delete(RedisKeyConstant.SHORT_LINK_ROUTE_KEY + requestParam.getFullShortUrl());
             if (existingShortLink.getValidDate() != null && existingShortLink.getValidDate().before(new Date())) { // 如果之前是过期的短链接，现在更新后变成了永久或未过期的，删除空值缓存
                 if (Objects.equals(requestParam.getValidDateType(), ValidDateTypeEnum.PERMANENT.getType()) || requestParam.getValidDate().after(new Date())) {
@@ -333,8 +334,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         String fullShortUrl = serverName + serverPort + "/" + shortUri;
         String originLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.SHORT_LINK_ROUTE_KEY + fullShortUrl);
         if (StrUtil.isNotBlank(originLink)) { // 缓存存在，直接返回
-            ShortLinkStatsRecordDTO shortLinkStatsRecordDTO = buildLinkStatsRecordAndSetUser(fullShortUrl, request, response); // 构建统计记录并设置用户信息
-            shortLinkStats(fullShortUrl, null, shortLinkStatsRecordDTO); // 统计短链接访问数据
+            shortLinkStats(buildLinkStatsRecordAndSetUser(fullShortUrl, request, response)); // 统计短链接访问数据
             ((HttpServletResponse) response).sendRedirect(originLink);
             return;
         }
@@ -355,9 +355,13 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         try {
             originLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.SHORT_LINK_ROUTE_KEY + fullShortUrl); // 重复检查缓存
             if (StrUtil.isNotBlank(originLink)) { // 如果缓存存在，说明被其他线程已经加载到缓存，直接返回
-                ShortLinkStatsRecordDTO shortLinkStatsRecordDTO = buildLinkStatsRecordAndSetUser(fullShortUrl, request, response);
-                shortLinkStats(fullShortUrl, null, shortLinkStatsRecordDTO);
+                shortLinkStats(buildLinkStatsRecordAndSetUser(fullShortUrl, request, response));
                 ((HttpServletResponse) response).sendRedirect(originLink);
+                return;
+            }
+            nullShortLink = stringRedisTemplate.opsForValue().get(RedisKeyConstant.SHORT_LINK_NULL_ROUTE_KEY + fullShortUrl); // 再次检查空值缓存
+            if (StrUtil.isNotBlank(nullShortLink)) {
+                ((HttpServletResponse) response).sendRedirect("/page/notfound");
                 return;
             }
             LambdaQueryWrapper<ShortLinkRouteDO> shortLinkRouteDOLambdaQueryWrapper = Wrappers.lambdaQuery(ShortLinkRouteDO.class)
@@ -384,8 +388,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     shortLinkDO.getOriginUrl(),
                     LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),
                     TimeUnit.MILLISECONDS);
-            ShortLinkStatsRecordDTO shortLinkStatsRecordDTO = buildLinkStatsRecordAndSetUser(fullShortUrl, request, response);
-            shortLinkStats(fullShortUrl, shortLinkDO.getGid(), shortLinkStatsRecordDTO);
+            shortLinkStats(buildLinkStatsRecordAndSetUser(fullShortUrl, request, response));
             ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
         } finally {
             lock.unlock();
@@ -393,10 +396,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     }
 
     @Override
-    public void shortLinkStats(String fullShortUrl, String gid, ShortLinkStatsRecordDTO shortLinkStatsRecord) {
+    public void shortLinkStats(ShortLinkStatsRecordDTO shortLinkStatsRecord) {
         Map<String, String> produceMessage = new HashMap<>();
-        produceMessage.put("fullShortUrl", fullShortUrl);
-        produceMessage.put("gid", gid);
         produceMessage.put("statsRecord", JSON.toJSONString(shortLinkStatsRecord));
         shortLinkStatsSaveProducer.send(produceMessage);
     }

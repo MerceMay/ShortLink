@@ -32,7 +32,7 @@ public class ShortLinkStatsController {
         return shortLinkRemoteService.getShortLinkStats(
                 requestParam.getFullShortUrl(),
                 requestParam.getGid(),
-                requestParam.getEnableStatus(),
+                0, // TODO:前端没有传递enableStatus参数，暂时传0占位
                 requestParam.getStartDate(),
                 requestParam.getEndDate());
     }

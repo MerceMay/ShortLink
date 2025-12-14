@@ -61,12 +61,7 @@ public class ShortLinkStatsSaveConsumer implements RocketMQListener<Map<String, 
             throw new ServiceException("消息未完成流程，需要消息队列重试");
         }
         try {
-            String fullShortUrl = produceMap.get("fullShortUrl");
-            if (StrUtil.isNotBlank(fullShortUrl)) {
-                String gid = produceMap.get("gid");
-                ShortLinkStatsRecordDTO statsRecord = JSON.parseObject(produceMap.get("statsRecord"), ShortLinkStatsRecordDTO.class);
-                processMessage(fullShortUrl, gid, statsRecord);
-            }
+            processMessage(JSON.parseObject(produceMap.get("statsRecord"), ShortLinkStatsRecordDTO.class));
         } catch (Throwable ex) {
             log.error("短链接访问量统计异常", ex);
             try {
@@ -80,18 +75,16 @@ public class ShortLinkStatsSaveConsumer implements RocketMQListener<Map<String, 
     }
 
 
-    public void processMessage(String fullShortUrl, String gid, ShortLinkStatsRecordDTO shortLinkStatsRecord) {
-        fullShortUrl = Optional.ofNullable(fullShortUrl).orElse(shortLinkStatsRecord.getFullShortUrl());
+    public void processMessage(ShortLinkStatsRecordDTO shortLinkStatsRecord) {
+        String fullShortUrl = shortLinkStatsRecord.getFullShortUrl();
         RReadWriteLock readWriteLock = redissonClient.getReadWriteLock(RedisKeyConstant.SHORT_LINK_UPDATE_GID_LOCK + fullShortUrl);
         RLock rLock = readWriteLock.readLock(); // 获取读锁
         rLock.lock();
         try {
-            if (StrUtil.isBlank(gid)) {
-                LambdaQueryWrapper<ShortLinkRouteDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkRouteDO.class)
-                        .eq(ShortLinkRouteDO::getFullShortUrl, fullShortUrl);
-                ShortLinkRouteDO shortLinkRouteDO = shortLinkRouteMapper.selectOne(queryWrapper);
-                gid = shortLinkRouteDO.getGid();
-            }
+            LambdaQueryWrapper<ShortLinkRouteDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkRouteDO.class)
+                    .eq(ShortLinkRouteDO::getFullShortUrl, fullShortUrl);
+            ShortLinkRouteDO shortLinkRouteDO = shortLinkRouteMapper.selectOne(queryWrapper);
+            String gid = shortLinkRouteDO.getGid();
             int hour = DateUtil.hour(new Date(), true);
             Week week = DateUtil.dayOfWeekEnum(new Date());
             int weekValue = week.getIso8601Value();
