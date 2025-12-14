@@ -4,25 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能">
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/OpenFeignConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/dao/entity/GroupUniqueDO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/dao/mapper/GroupUniqueMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/biz/user/UserContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/biz/user/UserInfoDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/biz/user/UserTransmitInterceptor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/config/UserConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/entity/GroupDO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dao/mapper/LinkGroupMapper.java" afterDir="false" />
+    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="新增短链接分组和唯一标识实体，优化分组创建逻辑，添加布隆过滤器防止重复gid注册">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/RBloomFilterConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/config/RBloomFilterConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/remote/ShortLinkRemoteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/biz/ShortLinkStatsRecordDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/dto/biz/ShortLinkStatsRecordDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,8 +194,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
+        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="Docker.docker-compose.yml: Compose 部署" />
       </list>
     </recent_temporary>
@@ -235,7 +223,7 @@
       <workItem from="1765707718220" duration="33000" />
       <workItem from="1765707769823" duration="69000" />
       <workItem from="1765707858334" duration="13000" />
-      <workItem from="1765708245199" duration="7002000" />
+      <workItem from="1765708245199" duration="9050000" />
     </task>
     <task id="LOCAL-00001" summary="修改错误">
       <option name="closed" value="true" />
@@ -277,7 +265,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765707231607</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="新增短链接分组和唯一标识实体，优化分组创建逻辑，添加布隆过滤器防止重复gid注册">
+      <option name="closed" value="true" />
+      <created>1765715594272</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1765715594272</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -300,7 +296,8 @@
     <MESSAGE value="新增数据源映射和SQL方言配置，更新.gitignore以排除IDEA文件" />
     <MESSAGE value="移除短链接统计表中的gid字段，采用连表查询" />
     <MESSAGE value="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能" />
+    <MESSAGE value="新增短链接分组和唯一标识实体，优化分组创建逻辑，添加布隆过滤器防止重复gid注册" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增短链接分组和唯一标识实体，优化分组创建逻辑，添加布隆过滤器防止重复gid注册" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

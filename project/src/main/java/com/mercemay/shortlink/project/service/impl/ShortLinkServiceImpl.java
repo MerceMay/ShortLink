@@ -314,8 +314,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 || !Objects.equals(existingShortLink.getValidDate(), requestParam.getValidDate())
                 || !Objects.equals(existingShortLink.getOriginUrl(), requestParam.getOriginUrl())) {
             stringRedisTemplate.delete(RedisKeyConstant.SHORT_LINK_ROUTE_KEY + requestParam.getFullShortUrl());
-            if (existingShortLink.getValidDate() != null && existingShortLink.getValidDate().before(new Date())) { // 如果之前是过期的短链接，现在更新后变成了永久或未过期的，删除空值缓存
-                if (Objects.equals(requestParam.getValidDateType(), ValidDateTypeEnum.PERMANENT.getType()) || requestParam.getValidDate().after(new Date())) {
+            Date currentDate = new Date();
+            if (existingShortLink.getValidDate() != null && existingShortLink.getValidDate().before(currentDate)) { // 如果之前是过期的短链接，现在更新后变成了永久或未过期的，删除空值缓存
+                if (Objects.equals(requestParam.getValidDateType(), ValidDateTypeEnum.PERMANENT.getType()) || requestParam.getValidDate().after(currentDate)) {
                     stringRedisTemplate.delete(RedisKeyConstant.SHORT_LINK_NULL_ROUTE_KEY + requestParam.getFullShortUrl());
                 }
             }
@@ -446,6 +447,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .browser(browser)
                 .device(device)
                 .network(network)
+                .currentDate(new Date())
                 .build();
     }
 

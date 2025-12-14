@@ -24,7 +24,7 @@ public class MessageQueueIdempotentHandler {
      */
     public boolean isMessageProcessed(String messageId) {
         String key = RedisKeyConstant.MESSAGE_QUEUE_IDEMPOTENT_KEY + messageId;
-        return Boolean.TRUE.equals(stringRedisTemplate.opsForValue().setIfAbsent(key, "0", 2, TimeUnit.MINUTES));
+        return Boolean.TRUE.equals(stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 2, TimeUnit.MINUTES));
     }
 
     /**
