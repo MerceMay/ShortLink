@@ -4,22 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="修改错误">
-      <change afterPath="$PROJECT_DIR$/volumes/rocketmq/conf/broker.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/AggregationApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/AggregationApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/init-sql/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/config/RedisStreamConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/producer/ShortLinkStatsSaveProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/producer/ShortLinkStatsSaveProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/sql/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/test/java/com/mercemay/shortlink/admin/GroupTableShardingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/test/java/com/mercemay/shortlink/admin/UserTableShardingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/sql/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/test/java/com/mercemay/shortlink/project/LinkStatsTodayTableShardingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/test/java/com/mercemay/shortlink/project/LinkTableShardingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/test/java/com/mercemay/shortlink/project/RouteTableShardingTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,37 +48,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.docker-compose.yml: Compose 部署.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.shortlink [clean].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;发现新的/更新的数据库配置&quot;,
-    &quot;Notification.DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.AggregationApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ShortLinkAdminApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ShortLinkApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;F:/Documents/Code/Java/shortlilnk&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.language.and.region&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.docker-compose.yml: Compose 部署.executor": "Run",
+    "Maven.shortlink [clean].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found": "发现新的/更新的数据库配置",
+    "Notification.DoNotAsk-DatabaseConfigFileWatcher.found": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.AggregationApplication.executor": "Run",
+    "Spring Boot.GatewayServiceApplication.executor": "Run",
+    "Spring Boot.ShortLinkAdminApplication.executor": "Run",
+    "Spring Boot.ShortLinkApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "F:/Documents/Code/Java/shortlilnk",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.language.and.region",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "mysql_aurora"
+    ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -209,7 +208,7 @@
       <workItem from="1765615389026" duration="10720000" />
       <workItem from="1765626156743" duration="2369000" />
       <workItem from="1765628553471" duration="1060000" />
-      <workItem from="1765692367397" duration="6001000" />
+      <workItem from="1765692367397" duration="7328000" />
     </task>
     <task id="LOCAL-00001" summary="修改错误">
       <option name="closed" value="true" />
@@ -219,7 +218,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765626123367</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程">
+      <option name="closed" value="true" />
+      <created>1765698534855</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765698534855</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -238,7 +245,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="修改错误" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改错误" />
+    <MESSAGE value="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增RocketMQ配置，更新短链接统计生产者和消费者逻辑，优化消息发送和处理流程" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -251,15 +259,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java</url>
-          <line>68</line>
-          <properties class="com.mercemay.shortlink.admin.service.impl.UserServiceImpl" method="register">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/UserServiceImpl.java</url>
