@@ -43,7 +43,7 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
                         try {
                             ShortLinkStatsRecordDTO statsRecordDTO = delayedQueue.poll(); // 获取并移除队列头部元素，若无元素则阻塞等待
                             if (statsRecordDTO != null) {
-                                if (messageQueueIdempotentHandler.isMessageProcessed(statsRecordDTO.getKeys())) {
+                                if (messageQueueIdempotentHandler.isMessageBeingConsumed(statsRecordDTO.getKeys())) {
                                     if (messageQueueIdempotentHandler.isAccomplish(statsRecordDTO.getKeys())) {
                                         return;
                                     }

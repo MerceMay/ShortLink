@@ -32,16 +32,28 @@ short-link:
     max-requests: 20
   domain:
     default: mercemay.com:8003
+  demo-mode:
+    enabled: false
+    blacklist:
+      - /api/short-link/admin/v1/group
+      - /api/short-link/admin/v1/recycle-bin/remove
+      - /api/short-link/admin/v1/create
+      - /api/short-link/admin/v1/create/batch
+      - /api/short-link/admin/v1/update
+      - /api/short-link/admin/v1/user
+      - /api/short-link/admin/v1/user/logout
+      - /api/short-link/admin/v1/recycle-bin/save
   stats:
     locale:
       amap-key: 2b3698715ce9c881bd4bfecac7fe940f
   route:
     whitelist:
       enabled: true
-      name: '知乎,哔哩哔哩'
+      name: '知乎,哔哩哔哩,GitHub'
       details:
         - zhihu.com
         - bilibili.com
+        - github.com
 
 mybatis-plus:
   configuration:
@@ -58,3 +70,12 @@ rocketmq:
     retry-times-when-send-async-failed: 1
   consumer:
     group: shortlink-stats-consumer-group
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}

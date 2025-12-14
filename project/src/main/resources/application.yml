@@ -31,10 +31,11 @@ short-link:
   route:
     whitelist:
       enabled: true
-      name: '知乎,哔哩哔哩'
+      name: '知乎,哔哩哔哩,GitHub'
       details:
         - zhihu.com
         - bilibili.com
+        - github.com
 
 mybatis-plus:
   configuration:

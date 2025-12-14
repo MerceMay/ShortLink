@@ -255,7 +255,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             ShortLinkDO shortLinkDO = ShortLinkDO.builder()
                     .domain(existingShortLink.getDomain())
                     .shortUri(existingShortLink.getShortUri())
-                    .favicon(existingShortLink.getFavicon())
+                    .favicon(Objects.equals(requestParam.getOriginUrl(), existingShortLink.getOriginUrl()) ? existingShortLink.getFavicon() : getFavicon(requestParam.getOriginUrl()))
                     .createdType(existingShortLink.getCreatedType())
                     .gid(requestParam.getGid())
                     .originUrl(requestParam.getOriginUrl())
@@ -294,7 +294,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .totalUv(existingShortLink.getTotalUv())
                         .totalUip(existingShortLink.getTotalUip())
                         .fullShortUrl(existingShortLink.getFullShortUrl())
-                        .favicon(getFavicon(requestParam.getOriginUrl()))
+                        .favicon(Objects.equals(requestParam.getOriginUrl(), existingShortLink.getOriginUrl()) ? existingShortLink.getFavicon() : getFavicon(requestParam.getOriginUrl()))
                         .delTime(0L)
                         .build();
                 baseMapper.insert(newShortLinkDO); // 插入新记录
