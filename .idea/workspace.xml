@@ -4,22 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="优化短链接统计逻辑，修复消息处理状态判断，统一当前时间处理">
-      <change afterPath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/config/DemoModeConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/config/DemoModeProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/volumes/mysql/init/02_data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/data_source_mapping.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/data_source_mapping.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+    <list default="true" id="26c4d3fc-80d3-48fe-8d12-bd79baec44a9" name="更改" comment="优化演示环境模式配置，修复拦截器逻辑中的属性名，更新删除标识字段的填充策略">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/AggregationApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/AggregationApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/service/impl/ShortLinkServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volumes/mysql/init/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/volumes/mysql/init/01_schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/database/BaseDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/com/mercemay/shortlink/admin/common/database/BaseDO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/config/DemoModeConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/config/DemoModeConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/config/DemoModeProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/aggregation/src/main/java/com/mercemay/shortlink/aggregation/config/DemoModeProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/database/BaseDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/com/mercemay/shortlink/project/common/database/BaseDO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,13 +75,17 @@
     &quot;Spring Boot.ShortLinkApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;F:/Documents/Code/Java/shortlilnk/project/src/main/java/com/mercemay/shortlink/project/common/biz/user&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/Documents/Code/Java/shortlilnk&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -203,17 +197,17 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
-        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="Docker.docker-compose.yml: Compose 部署" />
+        <item itemvalue="Spring Boot.ShortLinkApplication" />
+        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
-        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.240" />
       </set>
     </attachedChunks>
   </component>
@@ -232,7 +226,28 @@
       <workItem from="1765707718220" duration="33000" />
       <workItem from="1765707769823" duration="69000" />
       <workItem from="1765707858334" duration="13000" />
-      <workItem from="1765708245199" duration="13581000" />
+      <workItem from="1765708245199" duration="14637000" />
+      <workItem from="1765723039865" duration="33000" />
+      <workItem from="1765878306380" duration="7000" />
+      <workItem from="1765886670933" duration="2425000" />
+      <workItem from="1766047368283" duration="1000" />
+      <workItem from="1766049431594" duration="96000" />
+      <workItem from="1766569605945" duration="9440000" />
+      <workItem from="1766641054259" duration="909000" />
+      <workItem from="1766648221365" duration="266000" />
+      <workItem from="1766648498983" duration="41000" />
+      <workItem from="1766648548932" duration="229000" />
+      <workItem from="1766673969048" duration="189000" />
+      <workItem from="1766674208465" duration="78000" />
+      <workItem from="1766674335422" duration="159000" />
+      <workItem from="1766828368685" duration="157000" />
+      <workItem from="1766839939346" duration="95000" />
+      <workItem from="1766840684488" duration="197000" />
+      <workItem from="1766840894582" duration="342000" />
+      <workItem from="1767700687090" duration="695000" />
+      <workItem from="1767766531854" duration="8000" />
+      <workItem from="1768132654509" duration="1775000" />
+      <workItem from="1768196318175" duration="2309000" />
     </task>
     <task id="LOCAL-00001" summary="修改错误">
       <option name="closed" value="true" />
@@ -290,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765717590752</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="新增演示环境模式配置，优化相关拦截器逻辑，更新数据源映射和SQL方言配置">
+      <option name="closed" value="true" />
+      <created>1765722141332</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1765722141332</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -315,7 +338,8 @@
     <MESSAGE value="优化短链接统计逻辑，移除gid参数，更新相关SQL查询，提升代码可读性和性能" />
     <MESSAGE value="新增短链接分组和唯一标识实体，优化分组创建逻辑，添加布隆过滤器防止重复gid注册" />
     <MESSAGE value="优化短链接统计逻辑，修复消息处理状态判断，统一当前时间处理" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化短链接统计逻辑，修复消息处理状态判断，统一当前时间处理" />
+    <MESSAGE value="新增演示环境模式配置，优化相关拦截器逻辑，更新数据源映射和SQL方言配置" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增演示环境模式配置，优化相关拦截器逻辑，更新数据源映射和SQL方言配置" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -340,6 +364,10 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

@@ -32,7 +32,7 @@ public class DemoModeConfiguration implements WebMvcConfigurer {
     public class DemoModeInterceptor implements HandlerInterceptor {
         @Override
         public boolean preHandle(@Nullable HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable Object handler) throws Exception {
-            if (demoModeProperties.getEnable()
+            if (demoModeProperties.getEnabled()
                     && demoModeProperties.getBlacklist().contains(request.getRequestURI())
                     && !Objects.equals(request.getMethod(), "GET")) {
                 response.setContentType("application/json;charset=UTF-8");

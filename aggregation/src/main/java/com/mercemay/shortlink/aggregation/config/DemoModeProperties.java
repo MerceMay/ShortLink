@@ -16,7 +16,7 @@ public class DemoModeProperties {
     /**
      * 是否开启演示环境模式
      */
-    private Boolean enable;
+    private Boolean enabled;
 
     /**
      * 演示环境黑名单路径

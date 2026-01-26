@@ -26,6 +26,6 @@ public class BaseDO {
     /**
      * 删除标识 0：未删除 1：已删除
      */
-    @TableField(fill = FieldFill.INSERT)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Integer delFlag;
 }
